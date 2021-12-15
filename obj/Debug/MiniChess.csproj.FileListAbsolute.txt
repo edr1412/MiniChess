@@ -1,0 +1,10 @@
+C:\Users\hlx\Desktop\MiniChess\bin\Debug\MiniChess.exe.config
+C:\Users\hlx\Desktop\MiniChess\bin\Debug\MiniChess.exe
+C:\Users\hlx\Desktop\MiniChess\bin\Debug\MiniChess.pdb
+C:\Users\hlx\Desktop\MiniChess\obj\Debug\MiniChess.csproj.AssemblyReference.cache
+C:\Users\hlx\Desktop\MiniChess\obj\Debug\MiniChess.ChessBoard.resources
+C:\Users\hlx\Desktop\MiniChess\obj\Debug\MiniChess.Properties.Resources.resources
+C:\Users\hlx\Desktop\MiniChess\obj\Debug\MiniChess.csproj.GenerateResource.cache
+C:\Users\hlx\Desktop\MiniChess\obj\Debug\MiniChess.csproj.CoreCompileInputs.cache
+C:\Users\hlx\Desktop\MiniChess\obj\Debug\MiniChess.exe
+C:\Users\hlx\Desktop\MiniChess\obj\Debug\MiniChess.pdb
