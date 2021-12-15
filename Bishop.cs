@@ -11,13 +11,13 @@ namespace MiniChess
     {
         public Bishop(Point location, bool color)
         {
-            this.color = color;
+            this.Color = color;
             if (color == false)
-            { image = Properties.Resources.BlackBishop; }
+            { Image = Properties.Resources.BlackBishop; }
             if (color == true)
-            { image = Properties.Resources.WhiteBishop; }
+            { Image = Properties.Resources.WhiteBishop; }
 
-            this.location = location;
+            this.Location = location;
         }
 
         public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)

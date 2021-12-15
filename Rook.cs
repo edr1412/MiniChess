@@ -11,13 +11,13 @@ namespace MiniChess
     {
         public Rook(Point location, bool color)
         {
-            this.color = color;
+            this.Color = color;
             if (color == false)
-            { image = Properties.Resources.BlackRook; }
+            { Image = Properties.Resources.BlackRook; }
             if (color == true)
-            { image = Properties.Resources.WhiteRook; }
+            { Image = Properties.Resources.WhiteRook; }
 
-            this.location = location;
+            this.Location = location;
         }
 
         public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)

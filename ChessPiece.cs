@@ -9,29 +9,29 @@ namespace MiniChess
 {
     abstract class ChessPiece
     {
-        protected bool color { get; set; }
-        protected Point location { get; set; }
+        protected bool Color { get; set; }
+        protected Point Location { get; set; }
         protected List<Point> possibleMoves = new List<Point>();
-        protected Image image { get; set; }
+        protected Image Image { get; set; }
 
         public bool getColor()
         {
-            return color;
+            return Color;
         }
 
         public Point getLocation()
         {
-            return location;
+            return Location;
         }
 
         public void setLocation(Point newLocation)
         {
-            location = newLocation;
+            Location = newLocation;
         }
 
         public Image getImage()
         {
-            return image;
+            return Image;
         }
 
         public virtual List<Point> CalculateMoves(List<ChessPiece> chessPieces)
@@ -57,7 +57,7 @@ namespace MiniChess
         protected void canMoveHorizontally(List<ChessPiece> chessPieces)
         {
 
-            Point temp = new Point(location.X,location.Y);
+            Point temp = new Point(Location.X,Location.Y);
             ChessPiece tempChessPiece;
             temp.X++;
 
@@ -73,7 +73,7 @@ namespace MiniChess
             }
 
 
-            temp = location;
+            temp = Location;
             temp.Y++;
 
             while (temp.Y < 8 && findChessPiece(temp, chessPieces) == null)
@@ -88,7 +88,7 @@ namespace MiniChess
             }
 
 
-            temp = location;
+            temp = Location;
             temp.X--;
 
             while (temp.X >= 0 && findChessPiece(temp, chessPieces) == null)
@@ -103,7 +103,7 @@ namespace MiniChess
             }
 
 
-            temp = location;
+            temp = Location;
             temp.Y--;
 
             while (temp.Y >= 0 && findChessPiece(temp, chessPieces) == null)
@@ -121,7 +121,7 @@ namespace MiniChess
         protected void canMoveDiagonally(List<ChessPiece> chessPieces)
         {
 
-            Point temp = new Point(location.X, location.Y);
+            Point temp = new Point(Location.X, Location.Y);
             ChessPiece tempChessPiece;
 
 
@@ -140,7 +140,7 @@ namespace MiniChess
             }
 
 
-            temp = location;
+            temp = Location;
             temp.X--;
             temp.Y++;
             
@@ -157,7 +157,7 @@ namespace MiniChess
             }
 
 
-            temp = location;
+            temp = Location;
             temp.X++;
             temp.Y--;
 
@@ -174,7 +174,7 @@ namespace MiniChess
             }
 
 
-            temp = location;
+            temp = Location;
             temp.X--;
             temp.Y--;
 

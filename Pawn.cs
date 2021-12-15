@@ -14,13 +14,13 @@ namespace MiniChess
 
         public Pawn(Point location, bool color)
         {
-            this.color = color;
+            this.Color = color;
             if (color == false)
-            { image = Properties.Resources.BlackPawn; }
+            { Image = Properties.Resources.BlackPawn; }
             if (color == true)
-            { image = Properties.Resources.WhitePawn; }
+            { Image = Properties.Resources.WhitePawn; }
 
-            this.location = location;
+            this.Location = location;
             hasMoved = false;
         }
 
@@ -29,74 +29,74 @@ namespace MiniChess
             possibleMoves.Clear();
            
             
-            Console.WriteLine(hasMoved + " " + color);
+            Console.WriteLine(hasMoved + " " + Color);
 
-            if (hasMoved == false && color == true)
+            if (hasMoved == false && Color == true)
             {
-                if (location.X - 1 >= 0 && this.findChessPiece(new Point(location.X - 1, location.Y), chessPieces) == null)
+                if (Location.X - 1 >= 0 && this.findChessPiece(new Point(Location.X - 1, Location.Y), chessPieces) == null)
                 {
-                    possibleMoves.Add(new Point(location.X- 1, location.Y));
-                    if (location.X - 2 >= 0 && this.findChessPiece(new Point(location.X - 2, location.Y), chessPieces) == null)
+                    possibleMoves.Add(new Point(Location.X- 1, Location.Y));
+                    if (Location.X - 2 >= 0 && this.findChessPiece(new Point(Location.X - 2, Location.Y), chessPieces) == null)
                     {
-                        possibleMoves.Add(new Point(location.X - 2, location.Y));
+                        possibleMoves.Add(new Point(Location.X - 2, Location.Y));
                     }
                 }
              }
-            if (hasMoved == true && color == true)
+            if (hasMoved == true && Color == true)
             {
-                if (location.X - 1 >= 0 && this.findChessPiece(new Point(location.X - 1, location.Y), chessPieces) == null)
+                if (Location.X - 1 >= 0 && this.findChessPiece(new Point(Location.X - 1, Location.Y), chessPieces) == null)
                 {
-                    possibleMoves.Add(new Point(location.X - 1, location.Y));
+                    possibleMoves.Add(new Point(Location.X - 1, Location.Y));
                 }
             }
             //check if can take enemy
-            if (color == true)
+            if (Color == true)
             {
-                ChessPiece possibleTarget = this.findChessPiece(new Point(location.X - 1, location.Y + 1), chessPieces);
-                if (location.X - 1 >= 0 && location.Y + 1 < 8 && possibleTarget != null && possibleTarget.getColor() == false)
+                ChessPiece possibleTarget = this.findChessPiece(new Point(Location.X - 1, Location.Y + 1), chessPieces);
+                if (Location.X - 1 >= 0 && Location.Y + 1 < 8 && possibleTarget != null && possibleTarget.getColor() == false)
                 {
-                    possibleMoves.Add(new Point(location.X - 1, location.Y + 1));
+                    possibleMoves.Add(new Point(Location.X - 1, Location.Y + 1));
                 }
-                possibleTarget = this.findChessPiece(new Point(location.X - 1, location.Y - 1), chessPieces);
-                if (location.X - 1 >= 0 && location.Y - 1 >= 0 && possibleTarget != null && possibleTarget.getColor() == false)
+                possibleTarget = this.findChessPiece(new Point(Location.X - 1, Location.Y - 1), chessPieces);
+                if (Location.X - 1 >= 0 && Location.Y - 1 >= 0 && possibleTarget != null && possibleTarget.getColor() == false)
                 {
-                    possibleMoves.Add(new Point(location.X - 1, location.Y - 1));
+                    possibleMoves.Add(new Point(Location.X - 1, Location.Y - 1));
                 }
             }
 
 
 
-            if (hasMoved == false && color == false)
+            if (hasMoved == false && Color == false)
             {
-                if (location.X + 1 < 8 && this.findChessPiece(new Point(location.X + 1, location.Y), chessPieces) == null)
+                if (Location.X + 1 < 8 && this.findChessPiece(new Point(Location.X + 1, Location.Y), chessPieces) == null)
                 {
-                    possibleMoves.Add(new Point(location.X + 1, location.Y));
-                    if (location.X + 2 < 8 && this.findChessPiece(new Point(location.X + 2, location.Y), chessPieces) == null)
+                    possibleMoves.Add(new Point(Location.X + 1, Location.Y));
+                    if (Location.X + 2 < 8 && this.findChessPiece(new Point(Location.X + 2, Location.Y), chessPieces) == null)
                     {
-                        possibleMoves.Add(new Point(location.X + 2, location.Y));
+                        possibleMoves.Add(new Point(Location.X + 2, Location.Y));
                     }
                 }
             }
 
-            if (hasMoved == true && color == false)
+            if (hasMoved == true && Color == false)
             {
-                if (location.X + 1 < 8 && this.findChessPiece(new Point(location.X + 1, location.Y), chessPieces) == null)
+                if (Location.X + 1 < 8 && this.findChessPiece(new Point(Location.X + 1, Location.Y), chessPieces) == null)
                 {
-                    possibleMoves.Add(new Point(location.X + 1, location.Y));
+                    possibleMoves.Add(new Point(Location.X + 1, Location.Y));
                 }
             }
             //check if can take enemy
-            if (color == false)
+            if (Color == false)
             {
-                ChessPiece possibleTarget = this.findChessPiece(new Point(location.X + 1, location.Y + 1), chessPieces);
-                if (location.X + 1 < 8 && location.Y + 1 < 8 && possibleTarget != null && possibleTarget.getColor() == true)
+                ChessPiece possibleTarget = this.findChessPiece(new Point(Location.X + 1, Location.Y + 1), chessPieces);
+                if (Location.X + 1 < 8 && Location.Y + 1 < 8 && possibleTarget != null && possibleTarget.getColor() == true)
                 {
-                    possibleMoves.Add(new Point(location.X + 1, location.Y + 1));
+                    possibleMoves.Add(new Point(Location.X + 1, Location.Y + 1));
                 }
-                possibleTarget = this.findChessPiece(new Point(location.X + 1, location.Y - 1), chessPieces);
-                if (location.X + 1 < 8 && location.Y - 1 >= 0 && possibleTarget != null && possibleTarget.getColor() == true)
+                possibleTarget = this.findChessPiece(new Point(Location.X + 1, Location.Y - 1), chessPieces);
+                if (Location.X + 1 < 8 && Location.Y - 1 >= 0 && possibleTarget != null && possibleTarget.getColor() == true)
                 {
-                    possibleMoves.Add(new Point(location.X + 1, location.Y - 1));
+                    possibleMoves.Add(new Point(Location.X + 1, Location.Y - 1));
                 }
             }
 

@@ -11,24 +11,24 @@ namespace MiniChess
     {
         public Knight(Point location, bool color)
         {
-            this.color = color;
+            this.Color = color;
             if (color == false)
-            { image = Properties.Resources.BlackKnight; }
+            { Image = Properties.Resources.BlackKnight; }
             if (color == true)
-            { image = Properties.Resources.WhiteKnight; }
+            { Image = Properties.Resources.WhiteKnight; }
 
-            this.location = location;
+            this.Location = location;
         }
 
 
         public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
         {
             possibleMoves.Clear();
-            Point temp = new Point(location.X, location.Y);
+            Point temp = new Point(Location.X, Location.Y);
             ChessPiece tempChessPiece;
 
 
-            temp = location;
+            temp = Location;
             temp.X += 1;
             temp.Y += 2;
             if (temp.X < 8 && temp.Y < 8)
@@ -45,7 +45,7 @@ namespace MiniChess
                 }
             }
 
-            temp = location;
+            temp = Location;
             temp.X += 1;
             temp.Y -= 2;
 
@@ -63,7 +63,7 @@ namespace MiniChess
                 }
             }
 
-            temp = location;
+            temp = Location;
             temp.X -= 1;
             temp.Y += 2;
             if (temp.X >= 0 && temp.Y < 8)
@@ -80,7 +80,7 @@ namespace MiniChess
                 }
             }
 
-            temp = location;
+            temp = Location;
             temp.X -= 1;
             temp.Y -= 2;
             if (temp.X >= 0 && temp.Y >= 0)
@@ -98,7 +98,7 @@ namespace MiniChess
             }
 
 
-            temp = location;
+            temp = Location;
             temp.X += 2;
             temp.Y += 1;
             if (temp.X < 8 && temp.Y < 8)
@@ -115,7 +115,7 @@ namespace MiniChess
                 }
             }
 
-            temp = location;
+            temp = Location;
             temp.X += 2;
             temp.Y -= 1;
 
@@ -133,7 +133,7 @@ namespace MiniChess
                 }
             }
 
-            temp = location;
+            temp = Location;
             temp.X -= 2;
             temp.Y += 1 ;
             if (temp.X >= 0 && temp.Y < 8)
@@ -150,7 +150,7 @@ namespace MiniChess
                 }
             }
 
-            temp = location;
+            temp = Location;
             temp.X -= 2;
             temp.Y -= 1;
             if (temp.X >= 0 && temp.Y >= 0)

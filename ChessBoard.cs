@@ -13,14 +13,14 @@ namespace MiniChess
     public partial class ChessBoard : Form
     {
     
-        private const int panelSize = 100;
-        private const int gridSize = 8;
-        private Panel[,] chessPanels = new Panel[gridSize, gridSize];
-        private List<ChessPiece> chessPieces = new List<ChessPiece>();
-        List<Point> potentialMoves = new List<Point>();
-        private bool whiteTurn = false;
+        private const int panelSize = 100;//每格大小
+        private const int gridSize = 8;//8x8 格
+        private Panel[,] chessPanels = new Panel[gridSize, gridSize];//Panel二维数组 放置8x8个格
+        private List<ChessPiece> chessPieces = new List<ChessPiece>();//棋子之列表
+        List<Point> potentialMoves = new List<Point>();//可移动区
+        private bool whiteTurn = false;//是否白棋回合
         private int turnCounter = 0;
-        ChessPiece selectedPiece;
+        ChessPiece selectedPiece;//选中棋子
 
         private List<Point> possibleMoves;
 
@@ -60,7 +60,7 @@ namespace MiniChess
 
         }
 
-
+        //棋盘开局
         void setUpBoard()
         {
             //empty out chess pieces
@@ -101,72 +101,60 @@ namespace MiniChess
 
         }
 
-
-        void panelClick(object sender, EventArgs e)
+        // 重绘棋盘
+        void redrawBoard()
         {
-            Panel panel = sender as Panel;
-
-            redrawBoard();
-
-            Point panelLocation = findPanel(panel);
-
-            if (panelLocation == null)
+            for (int row = 0; row < gridSize; row++)
             {
-                Console.WriteLine("ERROR_EMPTY PANELLOC");
-                return;
-            }
-            //check if square is highlighted and if is, moves selected piece
-            if (potentialMoves != null)
-            {
-                if (potentialMoves.Contains(panelLocation))
+                for (int column = 0; column < gridSize; column++)
                 {
-                    movePiece(panelLocation);
-                    potentialMoves.Clear();
-                }
-            }
-
-            //check if has unselected piece
-            ChessPiece chessPiece = findChessPiece(panelLocation);
-            if(chessPiece == null)
-            {
-                Console.WriteLine("Empty panel");
-                selectedPiece = null;
-                if (potentialMoves != null)
-                    potentialMoves.Clear();
-                return;
-            }
-            selectedPiece = chessPiece;
-
-            //colors in selected panel and calculates potential moves
-            if (chessPiece.getColor() == this.whiteTurn)
-            {
-                if (panelLocation.Y % 2 == 0)
-                    chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.Blue : Color.LightBlue;
-                else
-                    chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.LightBlue : Color.Blue;
-                potentialMoves = chessPiece.CalculateMoves(chessPieces);
-            }
-            else
-            { //clears potential moves if wrong color is selected
-                if (potentialMoves != null)
-                {
-                    potentialMoves.Clear();
-                }
-            }
-            // colors in potential panels
-            if (potentialMoves != null)
-            {
-                foreach (Point point in potentialMoves)
-                {
-                    Console.WriteLine(point);
-                    if (point.Y % 2 == 0)
-                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.Blue : Color.LightBlue;
+                    if (row % 2 == 0)
+                        chessPanels[column, row].BackColor = column % 2 != 0 ? Color.LightGray : Color.White;
                     else
-                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.LightBlue : Color.Blue;
+                        chessPanels[column, row].BackColor = column % 2 != 0 ? Color.White : Color.LightGray;
                 }
+            }
+
+            foreach (ChessPiece chessPiece in chessPieces)
+            {
+                chessPanels[chessPiece.getLocation().X, chessPiece.getLocation().Y].BackgroundImage = chessPiece.getImage();
             }
         }
 
+
+
+        
+
+        //得到指定位置的棋子
+        ChessPiece findChessPiece(Point location)
+        {
+            foreach (ChessPiece chessPiece in chessPieces)
+            {
+                if (chessPiece.getLocation() == location)
+                    return chessPiece;
+            }
+            return null;
+        }
+        //得到一格panel的位置
+        Point findPanel(Panel panel)
+        {
+            Point point = new Point();
+            for (int row = 0; row < gridSize; row++)
+            {
+                for (int column = 0; column < gridSize; column++)
+                {
+                    if (chessPanels[row, column] == panel)
+                    {
+                        point.X = row;
+                        point.Y = column;
+                        return point;
+                    }
+                }
+            }
+            return point;
+        }
+
+        //移动selectedPiece至panelLocation
         void movePiece(Point panelLocation)
         {
             chessPanels[selectedPiece.getLocation().X, selectedPiece.getLocation().Y].BackgroundImage = null;
@@ -207,53 +195,73 @@ namespace MiniChess
             }
         }
 
-        //utility function for finding chess piece
-        ChessPiece findChessPiece(Point location)
+        //点击触发，移动到所选可移动格，或者显示所选棋子的可移动区
+        void panelClick(object sender, EventArgs e)
         {
-            foreach (ChessPiece chessPiece in chessPieces)
+            Panel panel = sender as Panel;
+
+            redrawBoard();
+
+            Point panelLocation = findPanel(panel);
+
+            if (panelLocation == null)
             {
-                if (chessPiece.getLocation() == location)
-                    return chessPiece;
+                Console.WriteLine("ERROR_EMPTY PANELLOC");
+                return;
             }
-            return null;
-        }
-        // draws the board after every action
-        void redrawBoard()
-        {
-            for (int row = 0; row < gridSize; row++)
+            //check if square is highlighted and if is, moves selected piece
+            if (potentialMoves != null)
             {
-                for (int column = 0; column < gridSize; column++)
+                if (potentialMoves.Contains(panelLocation))
                 {
-                    if (row % 2 == 0)
-                        chessPanels[column, row].BackColor = column % 2 != 0 ? Color.LightGray : Color.White;
-                    else
-                        chessPanels[column, row].BackColor = column % 2 != 0 ? Color.White : Color.LightGray;
+                    movePiece(panelLocation);
+                    potentialMoves.Clear();
                 }
             }
 
-            foreach (ChessPiece chessPiece in chessPieces)
+            //check if has unselected piece
+            ChessPiece chessPiece = findChessPiece(panelLocation);
+            if (chessPiece == null)
             {
-                chessPanels[chessPiece.getLocation().X, chessPiece.getLocation().Y].BackgroundImage = chessPiece.getImage();
+                Console.WriteLine("Empty panel");
+                selectedPiece = null;
+                if (potentialMoves != null)
+                    potentialMoves.Clear();
+                return;
             }
-        }
-        //utility for finding a specific panel
-        Point findPanel(Panel panel)
-        {
-            Point point = new Point();
-            for (int row = 0; row < gridSize; row++)
+            selectedPiece = chessPiece;
+
+            //colors in selected panel and calculates potential moves
+            if (chessPiece.getColor() == this.whiteTurn)
             {
-                for (int column = 0; column < gridSize; column++)
+                if (panelLocation.Y % 2 == 0)
+                    chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.Blue : Color.LightBlue;
+                else
+                    chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.LightBlue : Color.Blue;
+                potentialMoves = chessPiece.CalculateMoves(chessPieces);
+            }
+            else
+            { //clears potential moves if wrong color is selected
+                if (potentialMoves != null)
                 {
-                    if (chessPanels[row, column] == panel)
-                    {
-                        point.X = row;
-                        point.Y = column;
-                        return point;
-                    }
+                    potentialMoves.Clear();
                 }
             }
-            return point;
+            // colors in potential panels
+            if (potentialMoves != null)
+            {
+                foreach (Point point in potentialMoves)
+                {
+                    Console.WriteLine(point);
+                    if (point.Y % 2 == 0)
+                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.Blue : Color.LightBlue;
+                    else
+                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.LightBlue : Color.Blue;
+                }
+            }
         }
+
+        
 
     }
 }
