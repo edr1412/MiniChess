@@ -13,10 +13,10 @@ namespace MiniChess
     public partial class ChessBoard : Form
     {
     
-        private const int panelSize = 100;//每格大小
-        private const int gridSize = 8;//8x8 格
-        private Panel[,] chessPanels = new Panel[gridSize, gridSize];//Panel二维数组 放置8x8个格
-        private List<ChessPiece> chessPieces = new List<ChessPiece>();//棋子之列表
+        private const int panelSize = 100;//每格边长
+        private const int gridSize = 8;//8x8个格
+        private Panel[,] chessPanels = new Panel[gridSize, gridSize];//棋格集
+        private List<ChessPiece> chessPieces = new List<ChessPiece>();//棋子集
         List<Point> potentialMoves = new List<Point>();//可移动区
         private bool whiteTurn = false;//是否白棋回合
         private int turnCounter = 0;
@@ -29,6 +29,7 @@ namespace MiniChess
             InitializeComponent();
         }
 
+        //打开窗口时执行。创建每个格子的panel，并存放于chessPanels
         private void Form1_Load(object sender, EventArgs e)
         {
             for (int row = 0; row < gridSize; row++)
@@ -63,17 +64,17 @@ namespace MiniChess
         //棋盘开局
         void setUpBoard()
         {
-            //empty out chess pieces
+            //清空棋子集
             chessPieces.Clear();
 
 
-            //add black pieces
+            //添加黑子
 
             chessPieces.Add(new Rook(new Point(0, 0), false));
             chessPieces.Add(new Knight(new Point(0, 1), false));
             chessPieces.Add(new Bishop(new Point(0, 2), false));
-            chessPieces.Add(new Queen(new Point(0, 3), false));
-            chessPieces.Add(new King(new Point(0, 4), false));
+            chessPieces.Add(new King(new Point(0, 3), false));
+            chessPieces.Add(new Queen(new Point(0, 4), false));
             chessPieces.Add(new Bishop(new Point(0, 5), false));
             chessPieces.Add(new Knight(new Point(0, 6), false));
             chessPieces.Add(new Rook(new Point(0, 7), false));
@@ -82,7 +83,7 @@ namespace MiniChess
                 chessPieces.Add(new Pawn(new Point(1, x), false));
             }
 
-            //add white pieces
+            //添加白子
 
             chessPieces.Add(new Rook(new Point(7, 0), true));
             chessPieces.Add(new Knight(new Point(7, 1), true));
@@ -101,20 +102,23 @@ namespace MiniChess
 
         }
 
-        // 重绘棋盘
+        // 刷新界面
         void redrawBoard()
         {
+            //绘制棋盘
             for (int row = 0; row < gridSize; row++)
             {
                 for (int column = 0; column < gridSize; column++)
                 {
+                    //偶数行：白黑白黑白黑白黑
                     if (row % 2 == 0)
                         chessPanels[column, row].BackColor = column % 2 != 0 ? Color.LightGray : Color.White;
+                    //奇数行：黑白黑白黑白黑白
                     else
                         chessPanels[column, row].BackColor = column % 2 != 0 ? Color.White : Color.LightGray;
                 }
             }
-
+            //绘制棋子
             foreach (ChessPiece chessPiece in chessPieces)
             {
                 chessPanels[chessPiece.getLocation().X, chessPiece.getLocation().Y].BackgroundImage = chessPiece.getImage();
@@ -123,9 +127,9 @@ namespace MiniChess
 
 
 
-        
 
-        //得到指定位置的棋子
+
+        //工具，得到指定位置的棋子
         ChessPiece findChessPiece(Point location)
         {
             foreach (ChessPiece chessPiece in chessPieces)
@@ -135,7 +139,7 @@ namespace MiniChess
             }
             return null;
         }
-        //得到一格panel的位置
+        //得到一格panel的位置，用point存储整数对
         Point findPanel(Panel panel)
         {
             Point point = new Point();
@@ -154,26 +158,14 @@ namespace MiniChess
             return point;
         }
 
-        //移动selectedPiece至panelLocation
+        //移动selectedPiece至指定位置。每个turn一次。
         void movePiece(Point panelLocation)
         {
+            //清除棋子原处的图像
             chessPanels[selectedPiece.getLocation().X, selectedPiece.getLocation().Y].BackgroundImage = null;
 
-            //move to empty square
-            if (findChessPiece(panelLocation) == null)
-            {
-                chessPanels[panelLocation.X, panelLocation.Y].BackgroundImage = selectedPiece.getImage();
-                selectedPiece.setLocation(panelLocation);
-                whiteTurn = !whiteTurn;
-
-
-                if (selectedPiece is Pawn)
-                {
-                    selectedPiece.setHasMoved(true);
-                }
-            }
-            //move to occupied sqaure
-            else
+            //检查是否吃子
+            if (findChessPiece(panelLocation) != null)
             {
                 if (findChessPiece(panelLocation) is King)
                 {
@@ -183,25 +175,28 @@ namespace MiniChess
                         this.WhiteWins.Visible = true;
                 }
                 chessPieces.Remove(findChessPiece(panelLocation));
-                chessPanels[panelLocation.X, panelLocation.Y].BackgroundImage = selectedPiece.getImage();
-                selectedPiece.setLocation(panelLocation);
+            }
+            //在指定格更换为所选棋子的图像
+            chessPanels[panelLocation.X, panelLocation.Y].BackgroundImage = selectedPiece.getImage();
+            //更新棋子位置
+            selectedPiece.setLocation(panelLocation);
+            //下一回合
+            whiteTurn = !whiteTurn;
 
-                whiteTurn = !whiteTurn;
-
-                if (selectedPiece is Pawn)
-                {
-                    selectedPiece.setHasMoved(true);
-                }
+            //pawn需要额外set一下
+            if (selectedPiece is Pawn)
+            {
+                selectedPiece.setHasMoved(true);
             }
         }
 
         //点击触发，移动到所选可移动格，或者显示所选棋子的可移动区
         void panelClick(object sender, EventArgs e)
         {
-            Panel panel = sender as Panel;
-
+            //清除先前的高亮
             redrawBoard();
 
+            Panel panel = sender as Panel;
             Point panelLocation = findPanel(panel);
 
             if (panelLocation == null)
@@ -209,56 +204,42 @@ namespace MiniChess
                 Console.WriteLine("ERROR_EMPTY PANELLOC");
                 return;
             }
-            //check if square is highlighted and if is, moves selected piece
-            if (potentialMoves != null)
+            //如果所选panel已是高亮格，移动已选棋子至此处
+            if (potentialMoves != null && potentialMoves.Contains(panelLocation))
             {
-                if (potentialMoves.Contains(panelLocation))
-                {
-                    movePiece(panelLocation);
-                    potentialMoves.Clear();
-                }
+                movePiece(panelLocation);
+                potentialMoves.Clear();
             }
 
-            //check if has unselected piece
-            ChessPiece chessPiece = findChessPiece(panelLocation);
-            if (chessPiece == null)
+            selectedPiece = findChessPiece(panelLocation);
+
+            //若点击的是空白格或对方棋子，则刷新potentialMoves
+            if (selectedPiece == null || selectedPiece.getColor() != this.whiteTurn)
             {
-                Console.WriteLine("Empty panel");
                 selectedPiece = null;
                 if (potentialMoves != null)
                     potentialMoves.Clear();
                 return;
             }
-            selectedPiece = chessPiece;
 
-            //colors in selected panel and calculates potential moves
-            if (chessPiece.getColor() == this.whiteTurn)
-            {
-                if (panelLocation.Y % 2 == 0)
-                    chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.Blue : Color.LightBlue;
-                else
-                    chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.LightBlue : Color.Blue;
-                potentialMoves = chessPiece.CalculateMoves(chessPieces);
-            }
-            else
-            { //clears potential moves if wrong color is selected
-                if (potentialMoves != null)
-                {
-                    potentialMoves.Clear();
-                }
-            }
-            // colors in potential panels
+            //计算可移动区域并高亮
+            potentialMoves = selectedPiece.CalculateMoves(chessPieces);
             if (potentialMoves != null)
             {
                 foreach (Point point in potentialMoves)
                 {
                     Console.WriteLine(point);
                     if (point.Y % 2 == 0)
-                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.Blue : Color.LightBlue;
+                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.FromArgb(160, 144, 238, 144) : Color.FromArgb(134, 144, 238, 144);
                     else
-                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.LightBlue : Color.Blue;
+                        chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.FromArgb(134, 144, 238, 144) : Color.FromArgb(160, 144, 238, 144);
                 }
             }
+            if (panelLocation.Y % 2 == 0)
+                chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.FromArgb(224, 16, 139, 139) : Color.FromArgb(192, 16, 139, 139);
+            else
+                chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.FromArgb(192, 16, 139, 139) : Color.FromArgb(224, 16, 139, 139);
+        
         }
 
         

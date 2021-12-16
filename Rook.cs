@@ -9,15 +9,13 @@ namespace MiniChess
 {
     class Rook : ChessPiece
     {
-        public Rook(Point location, bool color)
+        public Rook(Point location, bool color) : base(location, color)
         {
-            this.Color = color;
             if (color == false)
             { Image = Properties.Resources.BlackRook; }
             if (color == true)
             { Image = Properties.Resources.WhiteRook; }
 
-            this.Location = location;
         }
 
         public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)

@@ -9,11 +9,17 @@ namespace MiniChess
 {
     abstract class ChessPiece
     {
+        //白色为True
         protected bool Color { get; set; }
+        //Point Location 用于储存棋子的逻辑位置 如(3,4)
         protected Point Location { get; set; }
         protected List<Point> possibleMoves = new List<Point>();
         protected Image Image { get; set; }
-
+        public ChessPiece(Point location, bool color)
+        {
+            this.Color = color;
+            this.Location = location;
+        }
         public bool getColor()
         {
             return Color;
@@ -34,6 +40,7 @@ namespace MiniChess
             return Image;
         }
 
+        //得到可落子的格子集。需要传入目前棋子集。
         public virtual List<Point> CalculateMoves(List<ChessPiece> chessPieces)
         {
             return null;
@@ -44,6 +51,7 @@ namespace MiniChess
             return;
         }
 
+        //工具，得到指定位置的棋子
         protected ChessPiece findChessPiece(Point location, List<ChessPiece> chessPieces)
         {
             foreach (ChessPiece chessPiece in chessPieces)
@@ -54,6 +62,7 @@ namespace MiniChess
             return null;
         }
 
+        //调用此函数即可向possibleMoves中加入十字经过的格子
         protected void canMoveHorizontally(List<ChessPiece> chessPieces)
         {
 
@@ -118,6 +127,7 @@ namespace MiniChess
             }
         }
 
+        //调用此函数即可向possibleMoves中加入X字经过的格子
         protected void canMoveDiagonally(List<ChessPiece> chessPieces)
         {
 

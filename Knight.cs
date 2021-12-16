@@ -9,15 +9,13 @@ namespace MiniChess
 {
     class Knight : ChessPiece
     {
-        public Knight(Point location, bool color)
+        public Knight(Point location, bool color) : base(location, color)
         {
-            this.Color = color;
             if (color == false)
             { Image = Properties.Resources.BlackKnight; }
             if (color == true)
             { Image = Properties.Resources.WhiteKnight; }
 
-            this.Location = location;
         }
 
 

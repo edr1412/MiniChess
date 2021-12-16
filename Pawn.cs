@@ -12,15 +12,13 @@ namespace MiniChess
 
         private bool hasMoved;
 
-        public Pawn(Point location, bool color)
+        public Pawn(Point location, bool color) : base(location, color)
         {
-            this.Color = color;
             if (color == false)
             { Image = Properties.Resources.BlackPawn; }
             if (color == true)
             { Image = Properties.Resources.WhitePawn; }
 
-            this.Location = location;
             hasMoved = false;
         }
 

@@ -9,15 +9,13 @@ namespace MiniChess
 {
     class Queen : ChessPiece
     {
-        public Queen(Point location, bool color)
+        public Queen(Point location, bool color) : base(location, color)
         {
-            this.Color = color;
             if (color == false)
             { Image = Properties.Resources.BlackQueen; }
             if (color == true)
             { Image = Properties.Resources.WhiteQueen; }
 
-            this.Location = location;
         }
 
         public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
