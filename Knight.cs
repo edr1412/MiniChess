@@ -37,7 +37,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }
@@ -55,7 +55,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }
@@ -72,7 +72,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }
@@ -89,7 +89,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }
@@ -107,7 +107,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }
@@ -125,7 +125,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }
@@ -142,7 +142,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }
@@ -159,7 +159,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(temp);
                 }
-                if (tempChessPiece != null && tempChessPiece.getColor() != this.getColor())
+                else if (tempChessPiece.getColor() != this.getColor())
                 {
                     possibleMoves.Add(temp);
                 }

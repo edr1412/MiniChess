@@ -25,31 +25,34 @@ namespace MiniChess
         public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
         {
             possibleMoves.Clear();
-           
-            
+
             Console.WriteLine(hasMoved + " " + Color);
 
-            if (hasMoved == false && Color == true)
-            {
-                if (Location.X - 1 >= 0 && this.findChessPiece(new Point(Location.X - 1, Location.Y), chessPieces) == null)
-                {
-                    possibleMoves.Add(new Point(Location.X- 1, Location.Y));
-                    if (Location.X - 2 >= 0 && this.findChessPiece(new Point(Location.X - 2, Location.Y), chessPieces) == null)
-                    {
-                        possibleMoves.Add(new Point(Location.X - 2, Location.Y));
-                    }
-                }
-             }
-            if (hasMoved == true && Color == true)
-            {
-                if (Location.X - 1 >= 0 && this.findChessPiece(new Point(Location.X - 1, Location.Y), chessPieces) == null)
-                {
-                    possibleMoves.Add(new Point(Location.X - 1, Location.Y));
-                }
-            }
-            //check if can take enemy
+            //白子
             if (Color == true)
             {
+                //初始可以走2步或者1步
+                if (hasMoved == false)
+                {
+                    if (Location.X - 1 >= 0 && this.findChessPiece(new Point(Location.X - 1, Location.Y), chessPieces) == null)
+                    {
+                        possibleMoves.Add(new Point(Location.X - 1, Location.Y));
+                        if (Location.X - 2 >= 0 && this.findChessPiece(new Point(Location.X - 2, Location.Y), chessPieces) == null)
+                        {
+                            possibleMoves.Add(new Point(Location.X - 2, Location.Y));
+                        }
+                    }
+                }
+                //白子移动过，可以走1步
+                if (hasMoved == true)
+                {
+                    if (Location.X - 1 >= 0 && this.findChessPiece(new Point(Location.X - 1, Location.Y), chessPieces) == null)
+                    {
+                        possibleMoves.Add(new Point(Location.X - 1, Location.Y));
+                    }
+                }
+                //白子，寻找有无可吃的子
+
                 ChessPiece possibleTarget = this.findChessPiece(new Point(Location.X - 1, Location.Y + 1), chessPieces);
                 if (Location.X - 1 >= 0 && Location.Y + 1 < 8 && possibleTarget != null && possibleTarget.getColor() == false)
                 {
@@ -60,32 +63,33 @@ namespace MiniChess
                 {
                     possibleMoves.Add(new Point(Location.X - 1, Location.Y - 1));
                 }
+
+
             }
-
-
-
-            if (hasMoved == false && Color == false)
+            //黑子，同理
+            else
             {
-                if (Location.X + 1 < 8 && this.findChessPiece(new Point(Location.X + 1, Location.Y), chessPieces) == null)
+                if (hasMoved == false)
                 {
-                    possibleMoves.Add(new Point(Location.X + 1, Location.Y));
-                    if (Location.X + 2 < 8 && this.findChessPiece(new Point(Location.X + 2, Location.Y), chessPieces) == null)
+                    if (Location.X + 1 < 8 && this.findChessPiece(new Point(Location.X + 1, Location.Y), chessPieces) == null)
                     {
-                        possibleMoves.Add(new Point(Location.X + 2, Location.Y));
+                        possibleMoves.Add(new Point(Location.X + 1, Location.Y));
+                        if (Location.X + 2 < 8 && this.findChessPiece(new Point(Location.X + 2, Location.Y), chessPieces) == null)
+                        {
+                            possibleMoves.Add(new Point(Location.X + 2, Location.Y));
+                        }
                     }
                 }
-            }
 
-            if (hasMoved == true && Color == false)
-            {
-                if (Location.X + 1 < 8 && this.findChessPiece(new Point(Location.X + 1, Location.Y), chessPieces) == null)
+                if (hasMoved == true)
                 {
-                    possibleMoves.Add(new Point(Location.X + 1, Location.Y));
+                    if (Location.X + 1 < 8 && this.findChessPiece(new Point(Location.X + 1, Location.Y), chessPieces) == null)
+                    {
+                        possibleMoves.Add(new Point(Location.X + 1, Location.Y));
+                    }
                 }
-            }
-            //check if can take enemy
-            if (Color == false)
-            {
+
+
                 ChessPiece possibleTarget = this.findChessPiece(new Point(Location.X + 1, Location.Y + 1), chessPieces);
                 if (Location.X + 1 < 8 && Location.Y + 1 < 8 && possibleTarget != null && possibleTarget.getColor() == true)
                 {
@@ -96,6 +100,7 @@ namespace MiniChess
                 {
                     possibleMoves.Add(new Point(Location.X + 1, Location.Y - 1));
                 }
+
             }
 
             return possibleMoves;

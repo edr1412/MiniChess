@@ -176,6 +176,25 @@ namespace MiniChess
                 }
                 chessPieces.Remove(findChessPiece(panelLocation));
             }
+            //检查是否升变
+            if(selectedPiece.GetType().Name == "Pawn")
+            {
+                if(selectedPiece.getColor() && panelLocation.X == 0)
+                {
+                    chessPieces.Remove(selectedPiece);
+                    selectedPiece = new Queen(panelLocation, true);
+                    chessPieces.Add(selectedPiece);
+
+                }
+                else if (!selectedPiece.getColor() && panelLocation.X == 7)
+                {
+                    chessPieces.Remove(selectedPiece);
+                    selectedPiece = new Queen(panelLocation, false);
+                    chessPieces.Add(selectedPiece);
+
+                }
+            }
+
             //在指定格更换为所选棋子的图像
             chessPanels[panelLocation.X, panelLocation.Y].BackgroundImage = selectedPiece.getImage();
             //更新棋子位置
