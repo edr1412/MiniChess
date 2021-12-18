@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace MiniChess
 {
-    class Pawn : ChessPiece
+    class Pawn : ChessPiece,ICloneable
     {
 
-        private bool hasMoved;
 
         public Pawn(Point location, bool color) : base(location, color)
         {
@@ -19,10 +18,15 @@ namespace MiniChess
             if (color == true)
             { Image = Properties.Resources.WhitePawn; }
 
-            hasMoved = false;
         }
 
-        public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
+        public new object Clone()
+        {
+            Pawn clone = (Pawn)base.Clone();
+            return clone;
+        }
+
+        protected override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
         {
             possibleMoves.Clear();
 
@@ -106,10 +110,6 @@ namespace MiniChess
             return possibleMoves;
         }
 
-        public override void setHasMoved(bool newSetting)
-        {
-            hasMoved = newSetting;
-        }
 
 
     }

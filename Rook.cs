@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MiniChess
 {
-    class Rook : ChessPiece
+    class Rook : ChessPiece,ICloneable
     {
         public Rook(Point location, bool color) : base(location, color)
         {
@@ -18,7 +18,14 @@ namespace MiniChess
 
         }
 
-        public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
+        public new object Clone()
+        {
+            Rook clone = (Rook)base.Clone();
+            return clone;
+        }
+
+
+        protected override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
         {
             possibleMoves.Clear();
             canMoveHorizontally(chessPieces);

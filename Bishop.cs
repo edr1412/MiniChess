@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MiniChess
 {
-    class Bishop : ChessPiece
+    class Bishop : ChessPiece,ICloneable
     {
         public Bishop(Point location, bool color) : base(location, color)
         {
@@ -18,7 +18,12 @@ namespace MiniChess
 
         }
 
-        public override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
+        public new object Clone()
+        {
+            Bishop clone = (Bishop)base.Clone();
+            return clone;
+        }
+        protected override List<Point> CalculateMoves(List<ChessPiece> chessPieces)
         {
             possibleMoves.Clear();
             canMoveDiagonally(chessPieces);

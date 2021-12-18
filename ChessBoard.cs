@@ -194,19 +194,51 @@ namespace MiniChess
 
                 }
             }
+            //检查是否王车易位
+            if (selectedPiece is King && !selectedPiece.getHasMoved())
+            { 
+                //短易位
+                if(panelLocation.Y == 1)
+                {
+                    Point rookLocation = new Point(selectedPiece.getColor() ? 7 : 0, 0);
+                    ChessPiece rookCastled = findChessPiece(rookLocation);
+                    chessPanels[rookLocation.X, rookLocation.Y].BackgroundImage = null;
+                    chessPanels[rookLocation.X,2 ].BackgroundImage = rookCastled.getImage();
+                    rookCastled.setLocation(new Point(rookLocation.X, 2));
+                    rookCastled.setHasMoved(true);
+
+                }
+                //长易位
+                else if (panelLocation.Y == 5)
+                {
+                    Point rookLocation = new Point(selectedPiece.getColor() ? 7 : 0, 7);
+                    ChessPiece rookCastled = findChessPiece(rookLocation);
+                    chessPanels[rookLocation.X, rookLocation.Y].BackgroundImage = null;
+                    chessPanels[rookLocation.X, 4].BackgroundImage = rookCastled.getImage();
+                    rookCastled.setLocation(new Point(rookLocation.X, 4));
+                    rookCastled.setHasMoved(true);
+
+                }
+            }
 
             //在指定格更换为所选棋子的图像
             chessPanels[panelLocation.X, panelLocation.Y].BackgroundImage = selectedPiece.getImage();
             //更新棋子位置
             selectedPiece.setLocation(panelLocation);
+            //设置已移动过
+            selectedPiece.setHasMoved(true);
+            
+
             //下一回合
             whiteTurn = !whiteTurn;
 
-            //pawn需要额外set一下
-            if (selectedPiece is Pawn)
-            {
-                selectedPiece.setHasMoved(true);
-            }
+            //Console.WriteLine("===========me\n");
+            //foreach (ChessPiece chessPiece in chessPieces)
+            //{
+            //    Console.WriteLine("{0} {1}:{2},{3}", chessPiece.getColor()?"white":"black",chessPiece.GetType().Name, chessPiece.getLocation().X, chessPiece.getLocation().Y);
+            //}
+
+
         }
 
         //点击触发，移动到所选可移动格，或者显示所选棋子的可移动区
@@ -242,7 +274,7 @@ namespace MiniChess
             }
 
             //计算可移动区域并高亮
-            potentialMoves = selectedPiece.CalculateMoves(chessPieces);
+            potentialMoves = selectedPiece.CalculateMovesWithKingConsidered(chessPieces);
             if (potentialMoves != null)
             {
                 foreach (Point point in potentialMoves)

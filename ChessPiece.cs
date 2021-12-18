@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MiniChess
 {
-    abstract class ChessPiece
+    abstract class ChessPiece:ICloneable
     {
         //白色为True
         protected bool Color { get; set; }
@@ -15,10 +15,24 @@ namespace MiniChess
         protected Point Location { get; set; }
         protected List<Point> possibleMoves = new List<Point>();
         protected Image Image { get; set; }
+        protected bool hasMoved;
         public ChessPiece(Point location, bool color)
         {
             this.Color = color;
             this.Location = location;
+            this.hasMoved = false;
+        }
+
+        public object Clone()
+        {
+            ChessPiece cp = (ChessPiece)this.MemberwiseClone();
+            cp.Color = this.Color;
+            cp.Location = this.Location;
+            cp.possibleMoves = this.possibleMoves;
+            cp.Image = this.Image;
+            cp.hasMoved = this.hasMoved;
+            return cp;
+
         }
         public bool getColor()
         {
@@ -40,16 +54,33 @@ namespace MiniChess
             return Image;
         }
 
+        public bool getHasMoved()
+        {
+            return hasMoved ;
+        }
+
+        public void setHasMoved(bool newSetting)
+        {
+            hasMoved = newSetting;
+        }
+
         //得到可落子的格子集。需要传入目前棋子集。
-        public virtual List<Point> CalculateMoves(List<ChessPiece> chessPieces)
+        protected virtual List<Point> CalculateMoves(List<ChessPiece> chessPieces)
         {
             return null;
         }
-
-        public virtual void setHasMoved(bool newSetting)
+        protected virtual List<Point> addExtraMoves(List<ChessPiece> chessPieces)
         {
-            return;
+            return null;
         }
+        public List<Point> CalculateMovesWithKingConsidered(List<ChessPiece> chessPieces) {
+            CalculateMoves(chessPieces);
+            addExtraMoves(chessPieces);
+            removeImposssibleMoves(chessPieces);
+            return possibleMoves;
+        }
+
+        
 
         //工具，得到指定位置的棋子
         protected ChessPiece findChessPiece(Point location, List<ChessPiece> chessPieces)
@@ -199,6 +230,80 @@ namespace MiniChess
             {
                 possibleMoves.Add(temp);
             }
+        }
+
+        protected bool isChecked(List<ChessPiece> chessPieces, Point kingPoint, bool isWhite)
+        {
+            foreach (ChessPiece chessPiece in chessPieces)
+            {
+                if (chessPiece.Color != isWhite && chessPiece.CalculateMoves(chessPieces).Contains(kingPoint))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        protected void removeImposssibleMoves(List<ChessPiece> chessPieces)
+        {
+            ChessPiece anotherMe = null;
+
+            //List<ChessPiece> chessPiecesTemp = new List<ChessPiece>(chessPieces);  //坑
+            List<ChessPiece> chessPiecesTemp = new List<ChessPiece>();
+            foreach (ChessPiece chessPiece in chessPieces)
+            {
+                ChessPiece temp = (ChessPiece)chessPiece.Clone();
+                if (chessPiece == this)
+                {
+                    anotherMe = temp;
+                }
+
+                chessPiecesTemp.Add(temp);
+            }
+            
+            Point kingPoint = Location;
+
+            List<Point> possibleMovesTemp = new List<Point>();
+            possibleMoves.ForEach(i => possibleMovesTemp.Add(i));
+            List<ChessPiece> chessPiecesTemporaryRemoved = new List<ChessPiece>();
+            foreach (Point p in possibleMoves)
+            {
+                Console.WriteLine("===========me\n{0},{1}", p.X, p.Y);
+                anotherMe.setLocation(p);
+                foreach (ChessPiece chessPiece in chessPiecesTemp)
+                {
+                    if (chessPiece.GetType().Name == "King" && chessPiece.getColor() == this.Color)
+                    {
+                        kingPoint = chessPiece.getLocation();
+                    }
+                    if(chessPiece.getLocation() == p && chessPiece.getColor()!=this.Color)
+                    {
+                        chessPiecesTemporaryRemoved.Add(chessPiece);
+
+                    }
+                }
+                foreach(ChessPiece chessPiece in chessPiecesTemporaryRemoved)
+                {
+                    chessPiecesTemp.Remove(chessPiece);
+                }
+
+                if (isChecked(chessPiecesTemp, kingPoint, this.Color))
+                {
+                    possibleMovesTemp.Remove(p);
+                }
+                foreach (ChessPiece chessPiece in chessPiecesTemporaryRemoved)
+                {
+                    chessPiecesTemp.Add(chessPiece);
+                }
+                chessPiecesTemporaryRemoved.Clear();
+            }
+            possibleMoves = possibleMovesTemp;
+
+            //Console.WriteLine("===========me\n");
+            //foreach (ChessPiece chessPiece in chessPieces)
+            //{
+            //    Console.WriteLine("{0} {1}:{2},{3}", chessPiece.getColor() ? "white" : "black", chessPiece.GetType().Name, chessPiece.getLocation().X, chessPiece.getLocation().Y);
+            //}
         }
     }
 }
