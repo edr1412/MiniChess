@@ -177,7 +177,7 @@ namespace MiniChess
             //检查是否满足王车易位
             if (!hasMoved)
             {
-                int x = Color ? 7 : 0;
+                int x = Color ? 0 : 7;
                 //短易位
                 tempChessPiece = findChessPiece(new Point(x, 0), chessPieces);
                 if (tempChessPiece is Rook && !tempChessPiece.getHasMoved())

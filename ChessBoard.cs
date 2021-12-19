@@ -18,7 +18,7 @@ namespace MiniChess
         private Panel[,] chessPanels = new Panel[gridSize, gridSize];//棋格集
         private List<ChessPiece> chessPieces = new List<ChessPiece>();//棋子集
         List<Point> potentialMoves = new List<Point>();//可移动区
-        private bool whiteTurn = false;//是否白棋回合
+        private bool whiteTurn = true;//是否白棋回合
         private int turnCounter = 0;
         ChessPiece selectedPiece;//选中棋子
 
@@ -68,35 +68,35 @@ namespace MiniChess
             chessPieces.Clear();
 
 
-            //添加黑子
-
-            chessPieces.Add(new Rook(new Point(0, 0), false));
-            chessPieces.Add(new Knight(new Point(0, 1), false));
-            chessPieces.Add(new Bishop(new Point(0, 2), false));
-            chessPieces.Add(new King(new Point(0, 3), false));
-            chessPieces.Add(new Queen(new Point(0, 4), false));
-            chessPieces.Add(new Bishop(new Point(0, 5), false));
-            chessPieces.Add(new Knight(new Point(0, 6), false));
-            chessPieces.Add(new Rook(new Point(0, 7), false));
-            for (int x = 0; x < 8; x++)
-            {
-                chessPieces.Add(new Pawn(new Point(1, x), false));
-            }
-
             //添加白子
 
-            chessPieces.Add(new Rook(new Point(7, 0), true));
-            chessPieces.Add(new Knight(new Point(7, 1), true));
-            chessPieces.Add(new Bishop(new Point(7, 2), true));
-            chessPieces.Add(new Queen(new Point(7, 4), true));
-            chessPieces.Add(new King(new Point(7, 3), true));
-            chessPieces.Add(new Bishop(new Point(7, 5), true));
-            chessPieces.Add(new Knight(new Point(7, 6), true));
-            chessPieces.Add(new Rook(new Point(7, 7), true));
+            chessPieces.Add(new Rook(new Point(0, 0), true));
+            chessPieces.Add(new Knight(new Point(0, 1), true));
+            chessPieces.Add(new Bishop(new Point(0, 2), true));
+            chessPieces.Add(new King(new Point(0, 3), true));
+            chessPieces.Add(new Queen(new Point(0, 4), true));
+            chessPieces.Add(new Bishop(new Point(0, 5), true));
+            chessPieces.Add(new Knight(new Point(0, 6), true));
+            chessPieces.Add(new Rook(new Point(0, 7), true));
+            for (int x = 0; x < 8; x++)
+            {
+                chessPieces.Add(new Pawn(new Point(1, x), true));
+            }
+
+            //添加黒子
+
+            chessPieces.Add(new Rook(new Point(7, 0), false));
+            chessPieces.Add(new Knight(new Point(7, 1), false));
+            chessPieces.Add(new Bishop(new Point(7, 2), false));
+            chessPieces.Add(new Queen(new Point(7, 4), false));
+            chessPieces.Add(new King(new Point(7, 3), false));
+            chessPieces.Add(new Bishop(new Point(7, 5), false));
+            chessPieces.Add(new Knight(new Point(7, 6), false));
+            chessPieces.Add(new Rook(new Point(7, 7), false));
 
             for (int x = 0; x < 8; x++)
             {
-                chessPieces.Add(new Pawn(new Point(6, x), true));
+                chessPieces.Add(new Pawn(new Point(6, x), false));
             }
 
 
@@ -110,10 +110,10 @@ namespace MiniChess
             {
                 for (int column = 0; column < gridSize; column++)
                 {
-                    //偶数行：白黑白黑白黑白黑
-                    if (row % 2 == 0)
+                    //奇数行：白黑白黑白黑白黑
+                    if (row % 2 != 0)
                         chessPanels[column, row].BackColor = column % 2 != 0 ? Color.LightGray : Color.White;
-                    //奇数行：黑白黑白黑白黑白
+                    //偶数行：黑白黑白黑白黑白
                     else
                         chessPanels[column, row].BackColor = column % 2 != 0 ? Color.White : Color.LightGray;
                 }
@@ -179,17 +179,17 @@ namespace MiniChess
             //检查是否升变
             if(selectedPiece.GetType().Name == "Pawn")
             {
-                if(selectedPiece.getColor() && panelLocation.X == 0)
-                {
-                    chessPieces.Remove(selectedPiece);
-                    selectedPiece = new Queen(panelLocation, true);
-                    chessPieces.Add(selectedPiece);
-
-                }
-                else if (!selectedPiece.getColor() && panelLocation.X == 7)
+                if(!selectedPiece.getColor() && panelLocation.X == 0)
                 {
                     chessPieces.Remove(selectedPiece);
                     selectedPiece = new Queen(panelLocation, false);
+                    chessPieces.Add(selectedPiece);
+
+                }
+                else if (selectedPiece.getColor() && panelLocation.X == 7)
+                {
+                    chessPieces.Remove(selectedPiece);
+                    selectedPiece = new Queen(panelLocation, true);
                     chessPieces.Add(selectedPiece);
 
                 }
@@ -200,7 +200,7 @@ namespace MiniChess
                 //短易位
                 if(panelLocation.Y == 1)
                 {
-                    Point rookLocation = new Point(selectedPiece.getColor() ? 7 : 0, 0);
+                    Point rookLocation = new Point(selectedPiece.getColor() ? 0 : 7, 0);
                     ChessPiece rookCastled = findChessPiece(rookLocation);
                     chessPanels[rookLocation.X, rookLocation.Y].BackgroundImage = null;
                     chessPanels[rookLocation.X,2 ].BackgroundImage = rookCastled.getImage();
@@ -211,7 +211,7 @@ namespace MiniChess
                 //长易位
                 else if (panelLocation.Y == 5)
                 {
-                    Point rookLocation = new Point(selectedPiece.getColor() ? 7 : 0, 7);
+                    Point rookLocation = new Point(selectedPiece.getColor() ? 0 : 7, 7);
                     ChessPiece rookCastled = findChessPiece(rookLocation);
                     chessPanels[rookLocation.X, rookLocation.Y].BackgroundImage = null;
                     chessPanels[rookLocation.X, 4].BackgroundImage = rookCastled.getImage();
@@ -280,13 +280,13 @@ namespace MiniChess
                 foreach (Point point in potentialMoves)
                 {
                     Console.WriteLine(point);
-                    if (point.Y % 2 == 0)
+                    if (point.Y % 2 != 0)
                         chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.FromArgb(160, 144, 238, 144) : Color.FromArgb(134, 144, 238, 144);
                     else
                         chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.FromArgb(134, 144, 238, 144) : Color.FromArgb(160, 144, 238, 144);
                 }
             }
-            if (panelLocation.Y % 2 == 0)
+            if (panelLocation.Y % 2 != 0)
                 chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.FromArgb(224, 16, 139, 139) : Color.FromArgb(192, 16, 139, 139);
             else
                 chessPanels[panelLocation.X, panelLocation.Y].BackColor = panelLocation.X % 2 != 0 ? Color.FromArgb(192, 16, 139, 139) : Color.FromArgb(224, 16, 139, 139);
