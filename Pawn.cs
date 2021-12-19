@@ -110,7 +110,54 @@ namespace MiniChess
             return possibleMoves;
         }
 
+        protected override List<Point> addExtraMoves(List<ChessPiece> chessPieces)
+        {
+            //吃过路兵
 
+            ChessPiece tempChessPiece = null;
+
+            if(Color && Location.X == 4)
+            {
+                if(Location.Y+1<8)
+                {
+                    tempChessPiece = findChessPiece(new Point(4, Location.Y + 1), chessPieces);
+                    if(tempChessPiece != null && tempChessPiece.getColor() != Color && tempChessPiece is Pawn && tempChessPiece.getLocationLast().X == 6)
+                    {
+                        possibleMoves.Add(new Point(5, Location.Y + 1));
+                    }
+                }
+                if (Location.Y - 1 >= 0)
+                {
+                    tempChessPiece = findChessPiece(new Point(4, Location.Y - 1), chessPieces);
+                    if (tempChessPiece != null && tempChessPiece.getColor() != Color && tempChessPiece is Pawn && tempChessPiece.getLocationLast().X == 6)
+                    {
+                        possibleMoves.Add(new Point(5, Location.Y - 1));
+                    }
+                }
+            }
+            else if (!Color && Location.X == 3)
+            {
+                if (Location.Y + 1 < 8)
+                {
+                    tempChessPiece = findChessPiece(new Point(3, Location.Y + 1), chessPieces);
+                    if (tempChessPiece != null && tempChessPiece.getColor() != Color && tempChessPiece is Pawn && tempChessPiece.getLocationLast().X == 1)
+                    {
+                        possibleMoves.Add(new Point(2, Location.Y + 1));
+                    }
+                }
+                if (Location.Y - 1 >= 0)
+                {
+                    tempChessPiece = findChessPiece(new Point(3, Location.Y - 1), chessPieces);
+                    if (tempChessPiece != null && tempChessPiece.getColor() != Color && tempChessPiece is Pawn && tempChessPiece.getLocationLast().X == 1)
+                    {
+                        possibleMoves.Add(new Point(2, Location.Y - 1));
+                    }
+                }
+            }
+
+
+            return possibleMoves;
+        }
 
     }
 }

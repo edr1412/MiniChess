@@ -13,6 +13,7 @@ namespace MiniChess
         protected bool Color { get; set; }
         //Point Location 用于储存棋子的逻辑位置 如(3,4)
         protected Point Location { get; set; }
+        protected Point LocationLast { get; set; }
         protected List<Point> possibleMoves = new List<Point>();
         protected Image Image { get; set; }
         protected bool hasMoved;
@@ -20,6 +21,7 @@ namespace MiniChess
         {
             this.Color = color;
             this.Location = location;
+            this.LocationLast = new Point(-1,-1);
             this.hasMoved = false;
         }
 
@@ -31,6 +33,7 @@ namespace MiniChess
             cp.possibleMoves = this.possibleMoves;
             cp.Image = this.Image;
             cp.hasMoved = this.hasMoved;
+            cp.LocationLast = this.LocationLast;
             return cp;
 
         }
@@ -47,6 +50,16 @@ namespace MiniChess
         public void setLocation(Point newLocation)
         {
             Location = newLocation;
+        }
+
+        public Point getLocationLast()
+        {
+            return LocationLast;
+        }
+
+        public void setLocationLast(Point newLocation)
+        {
+            LocationLast = newLocation;
         }
 
         public Image getImage()
@@ -232,7 +245,7 @@ namespace MiniChess
             }
         }
 
-        protected bool isChecked(List<ChessPiece> chessPieces, Point kingPoint, bool isWhite)
+        public bool isChecked(List<ChessPiece> chessPieces, Point kingPoint, bool isWhite)
         {
             foreach (ChessPiece chessPiece in chessPieces)
             {

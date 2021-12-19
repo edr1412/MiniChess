@@ -30,6 +30,7 @@
         {
             this.BlackWins = new System.Windows.Forms.Label();
             this.WhiteWins = new System.Windows.Forms.Label();
+            this.Draw = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BlackWins
@@ -56,12 +57,25 @@
             this.WhiteWins.Text = "White Wins!";
             this.WhiteWins.Visible = false;
             // 
+            // Draw
+            // 
+            this.Draw.AutoSize = true;
+            this.Draw.BackColor = System.Drawing.Color.Transparent;
+            this.Draw.Font = new System.Drawing.Font("Microsoft Himalaya", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Draw.Location = new System.Drawing.Point(296, 244);
+            this.Draw.Name = "Draw";
+            this.Draw.Size = new System.Drawing.Size(202, 96);
+            this.Draw.TabIndex = 2;
+            this.Draw.Text = "Draw.";
+            this.Draw.Visible = false;
+            // 
             // ChessBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(800, 797);
+            this.Controls.Add(this.Draw);
             this.Controls.Add(this.WhiteWins);
             this.Controls.Add(this.BlackWins);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -78,6 +92,7 @@
 
         private System.Windows.Forms.Label BlackWins;
         private System.Windows.Forms.Label WhiteWins;
+        private System.Windows.Forms.Label Draw;
     }
 }
 
