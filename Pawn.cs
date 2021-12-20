@@ -30,7 +30,7 @@ namespace MiniChess
         {
             possibleMoves.Clear();
 
-            Console.WriteLine(hasMoved + " " + Color);
+            //Console.WriteLine(hasMoved + " " + Color);
 
             //黑子
             if (Color == false)

@@ -281,7 +281,7 @@ namespace MiniChess
             List<ChessPiece> chessPiecesTemporaryRemoved = new List<ChessPiece>();
             foreach (Point p in possibleMoves)
             {
-                Console.WriteLine("===========me\n{0},{1}", p.X, p.Y);
+                //Console.WriteLine("===========me\n{0},{1}", p.X, p.Y);
                 anotherMe.setLocation(p);
                 foreach (ChessPiece chessPiece in chessPiecesTemp)
                 {

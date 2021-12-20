@@ -54,7 +54,9 @@ namespace MiniChess
             foreach(Control c in this.Controls)
             {
                 if (c is Panel)
+                {
                     c.Click += panelClick;
+                }
             }
 
             setUpBoard();
@@ -236,6 +238,10 @@ namespace MiniChess
                     selectedPiece = new Queen(panelLocation, false);
                     selectedPiece.setLocationLast(oldPlace);
                     chessPieces.Add(selectedPiece);
+                    chessPanels[panelLocation.X, panelLocation.Y].MouseHover += panelHover;
+                    chessPanels[panelLocation.X, panelLocation.Y].MouseLeave += panelNoLongerHover;
+                    chessPanels[panelLocation.X, panelLocation.Y].MouseWheel += panelScroll;
+                    Console.WriteLine("++++++++++++");
 
                 }
                 else if (selectedPiece.getColor() && panelLocation.X == 7)
@@ -245,7 +251,10 @@ namespace MiniChess
                     selectedPiece = new Queen(panelLocation, true);
                     selectedPiece.setLocationLast(oldPlace);
                     chessPieces.Add(selectedPiece);
-
+                    chessPanels[panelLocation.X, panelLocation.Y].MouseHover += panelHover;
+                    chessPanels[panelLocation.X, panelLocation.Y].MouseLeave += panelNoLongerHover;
+                    chessPanels[panelLocation.X, panelLocation.Y].MouseWheel += panelScroll;
+                    Console.WriteLine("++++++++++++");
                 }
 
             }
@@ -305,13 +314,78 @@ namespace MiniChess
 
 
         }
-
-        //点击触发，移动到所选可移动格，或者显示所选棋子的可移动区
-        void panelClick(object sender, EventArgs e)
+        //悬浮触发的方法，聚焦并高亮
+        void panelHover(object sender, EventArgs e)
         {
-            //清除先前的高亮
+            Console.WriteLine("------------");
+            Panel panel = sender as Panel;
+            panel.Focus();
+            Point panelLocation = findPanel(panel);
+            chessPanels[panelLocation.X, panelLocation.Y].BackColor = Color.Goldenrod;
+        }
+        //不再悬浮，取消高亮
+        void panelNoLongerHover(object sender, EventArgs e)
+        {
+            Panel panel = sender as Panel;
+            Point panelLocation = findPanel(panel);
+            chessPanels[panelLocation.X, panelLocation.Y].BackColor = Color.Aquamarine;
+        }
+        //滚轮触发的方法，选子
+        void panelScroll(object sender, EventArgs e)
+        {
+            Console.WriteLine("============");
+            Panel panel = sender as Panel;
+            Point panelLocation = findPanel(panel);
+            ChessPiece tempChess = findChessPiece(panelLocation);
+            Point oldPlace = tempChess.getLocationLast();
+            if(tempChess is Queen)
+            {
+                chessPieces.Remove(tempChess);
+                tempChess = new Knight(panelLocation, !whiteTurn);
+                tempChess.setLocationLast(oldPlace);
+                chessPieces.Add(tempChess);
+            }
+            else if(tempChess is Knight)
+            {
+                chessPieces.Remove(tempChess);
+                tempChess = new Rook(panelLocation, !whiteTurn);
+                tempChess.setLocationLast(oldPlace);
+                chessPieces.Add(tempChess);
+            }
+            else if (tempChess is Rook)
+            {
+                chessPieces.Remove(tempChess);
+                tempChess = new Bishop(panelLocation, !whiteTurn);
+                tempChess.setLocationLast(oldPlace);
+                chessPieces.Add(tempChess);
+            }
+            else
+            {
+                chessPieces.Remove(tempChess);
+                tempChess = new Queen(panelLocation, !whiteTurn);
+                tempChess.setLocationLast(oldPlace);
+                chessPieces.Add(tempChess);
+            }
             redrawBoard();
 
+        }
+
+        //点击触发的方法，移动到所选可移动格，或者显示所选棋子的可移动区
+        void panelClick(object sender, EventArgs e)
+        {
+            //清除悬浮与滚轮的订阅
+            if (locationNow.X>=0 && !findChessPiece(locationNow).getHasMoved())
+            {
+                //Console.WriteLine("------------");
+                Panel panelToClean = chessPanels[locationNow.X, locationNow.Y];
+                panelToClean.MouseHover -= panelHover;
+                panelToClean.MouseWheel -= panelScroll;
+                panelToClean.MouseLeave -= panelNoLongerHover;
+            }
+            
+
+            //清除先前的高亮
+            redrawBoard();
             Panel panel = sender as Panel;
             Point panelLocation = findPanel(panel);
 
@@ -328,7 +402,6 @@ namespace MiniChess
                 potentialMoves.Clear();
                 return;
             }
-
             selectedPiece = findChessPiece(panelLocation);
 
             //若点击的是空白格或对方棋子，则刷新potentialMoves
@@ -346,7 +419,7 @@ namespace MiniChess
             {
                 foreach (Point point in potentialMoves)
                 {
-                    Console.WriteLine(point);
+                    //Console.WriteLine(point);
                     if (point.Y % 2 != 0)
                         chessPanels[point.X, point.Y].BackColor = point.X % 2 != 0 ? Color.FromArgb(160, 144, 238, 144) : Color.FromArgb(134, 144, 238, 144);
                     else

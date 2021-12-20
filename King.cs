@@ -182,13 +182,13 @@ namespace MiniChess
                 tempChessPiece = findChessPiece(new Point(x, 0), chessPieces);
                 if (tempChessPiece is Rook && !tempChessPiece.getHasMoved())
                 {
-                    Console.WriteLine("passed 1");
+                    //Console.WriteLine("passed 1");
                     if (findChessPiece(new Point(x, 2), chessPieces) == null && findChessPiece(new Point(x, 1), chessPieces) == null)
                     {
-                        Console.WriteLine("passed 2");
+                        //Console.WriteLine("passed 2");
                         if (!isChecked(chessPieces, Location, Color) && !isChecked(chessPieces, new Point(x, 2), Color) && !isChecked(chessPieces, new Point(x, 1), Color))
                         {
-                            Console.WriteLine("passed 3");
+                            //Console.WriteLine("passed 3");
                             possibleMoves.Add(new Point(x, 1));
                         }
                     }

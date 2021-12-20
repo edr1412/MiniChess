@@ -1,0 +1,14 @@
+C:\Users\hlx\source\repos\MiniChess\bin\Release\MiniChess.exe.config
+C:\Users\hlx\source\repos\MiniChess\bin\Release\MiniChess.exe.manifest
+C:\Users\hlx\source\repos\MiniChess\bin\Release\MiniChess.application
+C:\Users\hlx\source\repos\MiniChess\bin\Release\MiniChess.exe
+C:\Users\hlx\source\repos\MiniChess\bin\Release\MiniChess.pdb
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.ChessBoard.resources
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.Properties.Resources.resources
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.csproj.GenerateResource.cache
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.csproj.CoreCompileInputs.cache
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.exe.manifest
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.application
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.exe
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.pdb
+C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.csproj.AssemblyReference.cache
