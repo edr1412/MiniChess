@@ -13,6 +13,7 @@ C:\Users\hlx\source\repos\MiniChess\bin\Debug\MiniChess.exe.manifest
 C:\Users\hlx\source\repos\MiniChess\bin\Debug\MiniChess.application
 C:\Users\hlx\source\repos\MiniChess\bin\Debug\MiniChess.exe
 C:\Users\hlx\source\repos\MiniChess\bin\Debug\MiniChess.pdb
+C:\Users\hlx\source\repos\MiniChess\obj\Debug\MiniChess.csproj.AssemblyReference.cache
 C:\Users\hlx\source\repos\MiniChess\obj\Debug\MiniChess.ChessBoard.resources
 C:\Users\hlx\source\repos\MiniChess\obj\Debug\MiniChess.Properties.Resources.resources
 C:\Users\hlx\source\repos\MiniChess\obj\Debug\MiniChess.csproj.GenerateResource.cache

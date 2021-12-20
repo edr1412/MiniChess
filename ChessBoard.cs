@@ -241,7 +241,7 @@ namespace MiniChess
                     chessPanels[panelLocation.X, panelLocation.Y].MouseHover += panelHover;
                     chessPanels[panelLocation.X, panelLocation.Y].MouseLeave += panelNoLongerHover;
                     chessPanels[panelLocation.X, panelLocation.Y].MouseWheel += panelScroll;
-                    Console.WriteLine("++++++++++++");
+                    //Console.WriteLine("++++++++++++");
 
                 }
                 else if (selectedPiece.getColor() && panelLocation.X == 7)
@@ -254,7 +254,7 @@ namespace MiniChess
                     chessPanels[panelLocation.X, panelLocation.Y].MouseHover += panelHover;
                     chessPanels[panelLocation.X, panelLocation.Y].MouseLeave += panelNoLongerHover;
                     chessPanels[panelLocation.X, panelLocation.Y].MouseWheel += panelScroll;
-                    Console.WriteLine("++++++++++++");
+                    //Console.WriteLine("++++++++++++");
                 }
 
             }
@@ -317,7 +317,7 @@ namespace MiniChess
         //悬浮触发的方法，聚焦并高亮
         void panelHover(object sender, EventArgs e)
         {
-            Console.WriteLine("------------");
+            //Console.WriteLine("------------");
             Panel panel = sender as Panel;
             panel.Focus();
             Point panelLocation = findPanel(panel);
@@ -333,7 +333,7 @@ namespace MiniChess
         //滚轮触发的方法，选子
         void panelScroll(object sender, EventArgs e)
         {
-            Console.WriteLine("============");
+            //Console.WriteLine("============");
             Panel panel = sender as Panel;
             Point panelLocation = findPanel(panel);
             ChessPiece tempChess = findChessPiece(panelLocation);
@@ -366,7 +366,7 @@ namespace MiniChess
                 tempChess.setLocationLast(oldPlace);
                 chessPieces.Add(tempChess);
             }
-            redrawBoard();
+            chessPanels[panelLocation.X, panelLocation.Y].BackgroundImage = tempChess.getImage();
 
         }
 
@@ -391,7 +391,7 @@ namespace MiniChess
 
             if (panelLocation == null)
             {
-                Console.WriteLine("ERROR_EMPTY PANELLOC");
+                //Console.WriteLine("error panel not found");
                 return;
             }
             //如果所选panel已是高亮格，移动已选棋子至此处
