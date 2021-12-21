@@ -86,6 +86,9 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+            this.KeyPreview = true;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+
         }
 
         #endregion

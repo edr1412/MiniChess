@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MiniChess.exe" size="48008">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MiniChess.exe" size="49544">
       <assemblyIdentity name="MiniChess" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>/gqBwz+GzKKgePNDvP0ktyP0t90V9591o8u85Vqxlt8=</dsig:DigestValue>
+        <dsig:DigestValue>V6e4rT8Ji+N0w8cK68YIssLHsi2Qwnw4bJoj0o0O7r8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

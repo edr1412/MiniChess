@@ -24,12 +24,24 @@ namespace MiniChess
         Point locationLast = new Point(-1, -1);
         Point locationNow = new Point(-1, -1);
         private int rotation = 0;//0:white left,1:white bottom,2:white right;3:white up
+        private Panel modifyingPanel = null;
+        private bool allowModify = false;
+        private int spaceHitCombo = 0;
 
         private List<Point> possibleMoves;
 
         public ChessBoard()
         {
             InitializeComponent();
+        }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+            {
+                spaceHitCombo = (spaceHitCombo + 1) % 5;
+                if(spaceHitCombo == 0)
+                    allowModify = !allowModify;
+            }
         }
 
         //打开窗口时执行。创建每个格子的panel，并存放于chessPanels
@@ -381,55 +393,79 @@ namespace MiniChess
             Point panelLocation = findLocationByPanel(panel);
             findPanelByLocation(panelLocation).BackColor = Color.Aquamarine;
         }
+        //滚轮触发的方法，选任意子
+        void panelSelectFromAllPieces(object sender, MouseEventArgs e)
+        {
+            Panel panel = sender as Panel;
+            panel.BackColor = Color.DarkGoldenrod;
+            Point panelLocation = findLocationByPanel(panel);
+            ChessPiece tempChess = findChessPiece(panelLocation);
+            ChessPiece[] chessSelectable = new ChessPiece[] { new Pawn(panelLocation,whiteTurn) , new Rook(panelLocation, whiteTurn),
+                new Knight(panelLocation,whiteTurn) ,new Bishop(panelLocation,whiteTurn) ,new Queen(panelLocation,whiteTurn) ,
+                new Pawn(panelLocation,!whiteTurn) , new Rook(panelLocation, !whiteTurn),
+                new Knight(panelLocation,!whiteTurn) ,new Bishop(panelLocation,!whiteTurn) ,new Queen(panelLocation,!whiteTurn) };
+            chessPieces.Remove(tempChess);
+            foreach(ChessPiece cp in chessSelectable)
+            {
+                if(cp.GetType() == tempChess.GetType() && cp.getColor() == tempChess.getColor())
+                {
+                    Console.WriteLine("+++++++");
+                    if (e.Delta < 0)
+                        tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 1) % 10];
+                    else
+                        tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 9) % 10];
+                    tempChess.setHasMoved(true);
+                    break;
+                }
+            }
+
+            chessPieces.Add(tempChess);
+
+            panel.BackgroundImage = tempChess.getImage();
+        }
         //滚轮触发的方法，选子
         void panelScroll(object sender, MouseEventArgs e)
         {
-            //Console.WriteLine("============");
             Panel panel = sender as Panel;
+            panel.BackColor = Color.Goldenrod;
             Point panelLocation = findLocationByPanel(panel);
             ChessPiece tempChess = findChessPiece(panelLocation);
             Point oldPlace = tempChess.getLocationLast();
-            if(tempChess is Queen)
+            chessPieces.Remove(tempChess);
+            if (tempChess is Queen)
             {
-                chessPieces.Remove(tempChess);
                 if (e.Delta < 0)
                     tempChess = new Knight(panelLocation, !whiteTurn);
                 else
                     tempChess = new Bishop(panelLocation, !whiteTurn);
                 tempChess.setLocationLast(oldPlace);
-                chessPieces.Add(tempChess);
             }
             else if(tempChess is Knight)
             {
-                chessPieces.Remove(tempChess);
                 if (e.Delta < 0)
                     tempChess = new Rook(panelLocation, !whiteTurn);
                 else
                     tempChess = new Queen(panelLocation, !whiteTurn);
                 tempChess.setLocationLast(oldPlace);
-                chessPieces.Add(tempChess);
             }
             else if (tempChess is Rook)
             {
-                chessPieces.Remove(tempChess);
                 if (e.Delta < 0)
                     tempChess = new Bishop(panelLocation, !whiteTurn);
                 else
                     tempChess = new Knight(panelLocation, !whiteTurn);
                 tempChess.setLocationLast(oldPlace);
-                chessPieces.Add(tempChess);
             }
             else
             {
-                chessPieces.Remove(tempChess);
                 if (e.Delta < 0)
                     tempChess = new Queen(panelLocation, !whiteTurn);
                 else
                     tempChess = new Rook(panelLocation, !whiteTurn);
                 tempChess.setLocationLast(oldPlace);
-                chessPieces.Add(tempChess);
             }
-            findPanelByLocation(panelLocation).BackgroundImage = tempChess.getImage();
+            chessPieces.Add(tempChess);
+            panel.BackgroundImage = tempChess.getImage();
 
         }
         //滚轮触发的方法，旋转棋盘
@@ -468,22 +504,35 @@ namespace MiniChess
         //点击触发的方法，移动到所选可移动格，或者显示所选棋子的可移动区
         void panelClick(object sender, MouseEventArgs e)
         {
+            //清除空格连击的计数
+            spaceHitCombo = 0;
             //清除有关升变的订阅。如果既动又没动，那就是刚刚升变了。
             if (locationNow.X>=0 && !findChessPiece(locationNow).getHasMoved())
             {
-                //Console.WriteLine("-=-=-=-=-=-=-=-=-=-{0},{1}", locationNow.X,locationNow.Y);
+                Console.WriteLine("-=-=-=-=-=-=-=-=-=-{0},{1}", locationNow.X,locationNow.Y);
                 Panel panelToClean = findPanelByLocation(locationNow);
                 panelToClean.MouseEnter -= panelEnter;
                 panelToClean.MouseWheel -= panelScroll;
                 panelToClean.MouseLeave -= panelLeave;
+            }
+            //清除棋子任选
+            if(modifyingPanel != null)
+            {
+                modifyingPanel.MouseWheel -= panelSelectFromAllPieces;
+                Point modifyingPanelLocation = findLocationByPanel(modifyingPanel);
+                if (modifyingPanelLocation.X <= 4 && modifyingPanelLocation.X >= 3 && modifyingPanelLocation.Y <= 4 && modifyingPanelLocation.Y >= 3)
+                {
+                    modifyingPanel.MouseWheel += boardRotate;
+                }
+                modifyingPanel = null;
             }
             
 
             //清除先前的高亮
             redrawBoard();
 
-            //若非左键点击，则仅刷新potentialMoves和selectedPiece
-            if (e.Button != MouseButtons.Left)
+            //非左键点击：仅刷新potentialMoves和selectedPiece（只要中键没起效）
+            if (e.Button != MouseButtons.Left && !(allowModify && e.Button == MouseButtons.Middle))
             {
                 selectedPiece = null;
                 if (potentialMoves != null)
@@ -491,8 +540,44 @@ namespace MiniChess
                 return;
             }
 
+            //获取所点的panel信息
             Panel panel = sender as Panel;
             Point panelLocation = findLocationByPanel(panel);
+
+            //中键点击：自由清除棋子或者新建棋子
+            if (allowModify && e.Button == MouseButtons.Middle)
+            {
+                if(locationNow == panelLocation)
+                {
+                    locationNow = new Point(-1, -1);
+                    locationLast = new Point(-1, -1);
+                }
+                selectedPiece = findChessPiece(panelLocation);
+                if (selectedPiece != null)
+                {
+                    chessPieces.Remove(selectedPiece);
+                    panel.BackgroundImage = null;
+                }
+                else
+                {
+                    ChessPiece addedPiece = new Pawn(panelLocation, whiteTurn);
+                    chessPieces.Add(addedPiece);
+                    panel.BackgroundImage = addedPiece.getImage();
+                    panel.MouseWheel += panelSelectFromAllPieces;
+                    if(panelLocation.X <= 4 && panelLocation.X >= 3 && panelLocation.Y <= 4 && panelLocation.Y >= 3)
+                    {
+                        panel.MouseWheel -= boardRotate;
+                    }
+                    modifyingPanel = panel;
+
+                }
+                selectedPiece = null;
+                if (potentialMoves != null)
+                    potentialMoves.Clear();
+                return;
+            }
+            
+            
 
 
             //如果所选panel已是高亮格，移动已选棋子至此处
