@@ -406,16 +406,20 @@ namespace MiniChess
                 new Knight(panelLocation,!whiteTurn) ,new Bishop(panelLocation,!whiteTurn) ,new Queen(panelLocation,!whiteTurn),
                 new King(panelLocation,!whiteTurn) };
             chessPieces.Remove(tempChess);
-            foreach(ChessPiece cp in chessSelectable)
+            Type tempChessType = tempChess.GetType();
+            bool tempChessColor = tempChess.getColor();
+            foreach (ChessPiece cp in chessSelectable)
             {
-                if(cp.GetType() == tempChess.GetType() && cp.getColor() == tempChess.getColor())
+                if (tempChessType == cp.GetType() && tempChessColor == cp.getColor())
                 {
-                    Console.WriteLine("+++++++");
+                    //Console.WriteLine("+++++++");
                     if (e.Delta < 0)
                         tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 1) % 12];
                     else
                         tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 11) % 12];
-                    tempChess.setHasMoved(true);
+                    //tempChess.setHasMoved(true);
+                    if(tempChess.GetType() == typeof(Pawn))
+                        tempChess.setHasMoved(true);
                     break;
                 }
             }
