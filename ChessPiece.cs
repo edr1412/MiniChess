@@ -274,8 +274,8 @@ namespace MiniChess
                 chessPiecesTemp.Add(temp);
             }
             
-            Point kingPoint = new Point(-1,-1);//若没有王就没有被将的机会
-
+            //Point kingPoint = new Point(-1,-1);//若没有王就没有被将的机会
+            List<Point> kingPoints = new List<Point>();//王的位置 支持多王
             List<Point> possibleMovesTemp = new List<Point>();
             possibleMoves.ForEach(i => possibleMovesTemp.Add(i));
             List<ChessPiece> chessPiecesTemporaryRemoved = new List<ChessPiece>();
@@ -287,9 +287,9 @@ namespace MiniChess
                 {
                     if (chessPiece.GetType().Name == "King" && chessPiece.getColor() == this.Color)
                     {
-                        kingPoint = chessPiece.getLocation();
+                        kingPoints.Add(chessPiece.getLocation());
                     }
-                    if(chessPiece.getLocation() == p && chessPiece.getColor()!=this.Color)
+                    if(chessPiece.getLocation() == p && chessPiece.getColor()!=this.Color)//如果有可吃的子，需要暂时除去然后进行运算
                     {
                         chessPiecesTemporaryRemoved.Add(chessPiece);
 
@@ -299,16 +299,19 @@ namespace MiniChess
                 {
                     chessPiecesTemp.Remove(chessPiece);
                 }
-
-                if (isChecked(chessPiecesTemp, kingPoint, this.Color))
+                foreach (Point kingPoint in kingPoints) 
                 {
-                    possibleMovesTemp.Remove(p);
+                    if (isChecked(chessPiecesTemp, kingPoint, this.Color))
+                    {
+                        possibleMovesTemp.Remove(p);
+                    } 
                 }
                 foreach (ChessPiece chessPiece in chessPiecesTemporaryRemoved)
                 {
                     chessPiecesTemp.Add(chessPiece);
                 }
                 chessPiecesTemporaryRemoved.Clear();
+                kingPoints.Clear();
             }
             possibleMoves = possibleMovesTemp;
 

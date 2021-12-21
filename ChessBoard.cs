@@ -402,8 +402,9 @@ namespace MiniChess
             ChessPiece tempChess = findChessPiece(panelLocation);
             ChessPiece[] chessSelectable = new ChessPiece[] { new Pawn(panelLocation,whiteTurn) , new Rook(panelLocation, whiteTurn),
                 new Knight(panelLocation,whiteTurn) ,new Bishop(panelLocation,whiteTurn) ,new Queen(panelLocation,whiteTurn) ,
-                new Pawn(panelLocation,!whiteTurn) , new Rook(panelLocation, !whiteTurn),
-                new Knight(panelLocation,!whiteTurn) ,new Bishop(panelLocation,!whiteTurn) ,new Queen(panelLocation,!whiteTurn) };
+                new King(panelLocation,whiteTurn), new Pawn(panelLocation,!whiteTurn) , new Rook(panelLocation, !whiteTurn),
+                new Knight(panelLocation,!whiteTurn) ,new Bishop(panelLocation,!whiteTurn) ,new Queen(panelLocation,!whiteTurn),
+                new King(panelLocation,!whiteTurn) };
             chessPieces.Remove(tempChess);
             foreach(ChessPiece cp in chessSelectable)
             {
@@ -411,9 +412,9 @@ namespace MiniChess
                 {
                     Console.WriteLine("+++++++");
                     if (e.Delta < 0)
-                        tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 1) % 10];
+                        tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 1) % 12];
                     else
-                        tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 9) % 10];
+                        tempChess = chessSelectable[(Array.IndexOf(chessSelectable, cp) + 11) % 12];
                     tempChess.setHasMoved(true);
                     break;
                 }
@@ -558,7 +559,10 @@ namespace MiniChess
             //中键点击：自由清除棋子或者新建棋子
             if (allowModify && e.Button == MouseButtons.Middle)
             {
-                if(locationNow == panelLocation)
+                this.BlackWins.Visible = false;
+                this.WhiteWins.Visible = false;
+                this.Draw.Visible = false;
+                if (locationNow == panelLocation)
                 {
                     locationNow = new Point(-1, -1);
                     locationLast = new Point(-1, -1);
@@ -571,6 +575,7 @@ namespace MiniChess
                 }
                 else
                 {
+                    //新建棋子。也可以试试换成随机产生一个。
                     ChessPiece addedPiece = new Pawn(panelLocation, whiteTurn);
                     chessPieces.Add(addedPiece);
                     panel.BackgroundImage = addedPiece.getImage();
