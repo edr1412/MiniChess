@@ -482,6 +482,17 @@ namespace MiniChess
                 panelToClean.MouseWheel -= panelScroll;
                 panelToClean.MouseLeave -= panelLeave;
             }
+            //清除棋子任选
+            if (modifyingPanel != null)
+            {
+                modifyingPanel.MouseWheel -= panelSelectFromAllPieces;
+                Point modifyingPanelLocation = findLocationByPanel(modifyingPanel);
+                if (modifyingPanelLocation.X <= 4 && modifyingPanelLocation.X >= 3 && modifyingPanelLocation.Y <= 4 && modifyingPanelLocation.Y >= 3)
+                {
+                    modifyingPanel.MouseWheel += boardRotate;
+                }
+                modifyingPanel = null;
+            }
             //更改rotation参数
             if (e.Delta < 0)
                 rotation = (rotation + 1) % 4;
