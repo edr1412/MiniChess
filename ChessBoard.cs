@@ -430,11 +430,31 @@ namespace MiniChess
         //滚轮触发的方法，旋转棋盘
         void boardRotate(object sender, MouseEventArgs e)
         {
+            //关于升变的订阅需要处理一下
+            //如果既动又没动，那就是刚刚升变了
+            //如果刚刚升变了，先清除有关升变的订阅
+            if (locationNow.X >= 0 && !findChessPiece(locationNow).getHasMoved())
+            {
+                Panel panelToClean = findPanelByLocation(locationNow);
+                panelToClean.MouseEnter -= panelHover;
+                panelToClean.MouseWheel -= panelScroll;
+                panelToClean.MouseLeave -= panelNoLongerHover;
+            }
+            //更改rotation参数
             if (e.Delta < 0)
                 rotation = (rotation + 1) % 4;
             else
                 rotation = (rotation + 3) % 4;
+            //刷新棋盘
             redrawBoard(true);
+            //如果刚刚升变了，再添加有关升变的订阅到正确panel
+            if (locationNow.X >= 0 && !findChessPiece(locationNow).getHasMoved())
+            {
+                Panel panelToClean = findPanelByLocation(locationNow);
+                panelToClean.MouseEnter += panelHover;
+                panelToClean.MouseWheel += panelScroll;
+                panelToClean.MouseLeave += panelNoLongerHover;
+            }
         }
 
 
@@ -442,10 +462,9 @@ namespace MiniChess
         //点击触发的方法，移动到所选可移动格，或者显示所选棋子的可移动区
         void panelClick(object sender, MouseEventArgs e)
         {
-            //清除有关升变的订阅
+            //清除有关升变的订阅。如果既动又没动，那就是刚刚升变了。
             if (locationNow.X>=0 && !findChessPiece(locationNow).getHasMoved())
             {
-                //Console.WriteLine("------------");
                 Panel panelToClean = findPanelByLocation(locationNow);
                 panelToClean.MouseEnter -= panelHover;
                 panelToClean.MouseWheel -= panelScroll;

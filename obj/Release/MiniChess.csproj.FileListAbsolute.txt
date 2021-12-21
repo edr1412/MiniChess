@@ -11,4 +11,3 @@ C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.exe.manifest
 C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.application
 C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.exe
 C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.pdb
-C:\Users\hlx\source\repos\MiniChess\obj\Release\MiniChess.csproj.AssemblyReference.cache
