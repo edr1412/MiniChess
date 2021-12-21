@@ -254,6 +254,8 @@ namespace MiniChess
         //移动selectedPiece至指定位置。每个turn一次。
         void movePiece(Point panelLocation)
         {
+            //标记升变
+            bool hasPromoted = false;
             //清除棋子原处的图像
             findPanelByLocation(selectedPiece.getLocation()).BackgroundImage = null;
 
@@ -284,9 +286,10 @@ namespace MiniChess
                     selectedPiece = new Queen(panelLocation, false);
                     selectedPiece.setLocationLast(oldPlace);
                     chessPieces.Add(selectedPiece);
-                    findPanelByLocation(panelLocation).MouseEnter += panelHover;
-                    findPanelByLocation(panelLocation).MouseLeave += panelNoLongerHover;
+                    findPanelByLocation(panelLocation).MouseEnter += panelEnter;
+                    findPanelByLocation(panelLocation).MouseLeave += panelLeave;
                     findPanelByLocation(panelLocation).MouseWheel += panelScroll;
+                    hasPromoted = true;
                     //Console.WriteLine("++++++++++++");
 
                 }
@@ -297,15 +300,16 @@ namespace MiniChess
                     selectedPiece = new Queen(panelLocation, true);
                     selectedPiece.setLocationLast(oldPlace);
                     chessPieces.Add(selectedPiece);
-                    findPanelByLocation(panelLocation).MouseEnter += panelHover;
-                    findPanelByLocation(panelLocation).MouseLeave += panelNoLongerHover;
+                    findPanelByLocation(panelLocation).MouseEnter += panelEnter;
+                    findPanelByLocation(panelLocation).MouseLeave += panelLeave;
                     findPanelByLocation(panelLocation).MouseWheel += panelScroll;
+                    hasPromoted = true;
                     //Console.WriteLine("++++++++++++");
                 }
 
             }
             //检查是否王车易位
-            if (selectedPiece is King && !selectedPiece.getHasMoved())
+            else if (selectedPiece is King && !selectedPiece.getHasMoved())
             { 
                 //短易位
                 if(panelLocation.Y == 6)
@@ -342,7 +346,8 @@ namespace MiniChess
             locationNow = selectedPiece.getLocation();
 
             //设置已移动过
-            selectedPiece.setHasMoved(true);
+            if(!hasPromoted)
+                selectedPiece.setHasMoved(true);
             
 
             //下一回合
@@ -360,17 +365,17 @@ namespace MiniChess
 
 
         }
-        //悬浮触发的方法，聚焦并高亮
-        void panelHover(object sender, EventArgs e)
+        //进入，高亮
+        void panelEnter(object sender, EventArgs e)
         {
             //Console.WriteLine("------------");
             Panel panel = sender as Panel;
-            panel.Focus();
+            //panel.Focus();
             Point panelLocation = findLocationByPanel(panel);
             findPanelByLocation(panelLocation).BackColor = Color.Goldenrod;
         }
-        //不再悬浮，取消高亮
-        void panelNoLongerHover(object sender, EventArgs e)
+        //离开，取消高亮
+        void panelLeave(object sender, EventArgs e)
         {
             Panel panel = sender as Panel;
             Point panelLocation = findLocationByPanel(panel);
@@ -435,10 +440,11 @@ namespace MiniChess
             //如果刚刚升变了，先清除有关升变的订阅
             if (locationNow.X >= 0 && !findChessPiece(locationNow).getHasMoved())
             {
+                //Console.WriteLine("==================={0},{1}", locationNow.X, locationNow.Y);
                 Panel panelToClean = findPanelByLocation(locationNow);
-                panelToClean.MouseEnter -= panelHover;
+                panelToClean.MouseEnter -= panelEnter;
                 panelToClean.MouseWheel -= panelScroll;
-                panelToClean.MouseLeave -= panelNoLongerHover;
+                panelToClean.MouseLeave -= panelLeave;
             }
             //更改rotation参数
             if (e.Delta < 0)
@@ -451,9 +457,9 @@ namespace MiniChess
             if (locationNow.X >= 0 && !findChessPiece(locationNow).getHasMoved())
             {
                 Panel panelToClean = findPanelByLocation(locationNow);
-                panelToClean.MouseEnter += panelHover;
+                panelToClean.MouseEnter += panelEnter;
                 panelToClean.MouseWheel += panelScroll;
-                panelToClean.MouseLeave += panelNoLongerHover;
+                panelToClean.MouseLeave += panelLeave;
             }
         }
 
@@ -465,10 +471,11 @@ namespace MiniChess
             //清除有关升变的订阅。如果既动又没动，那就是刚刚升变了。
             if (locationNow.X>=0 && !findChessPiece(locationNow).getHasMoved())
             {
+                //Console.WriteLine("-=-=-=-=-=-=-=-=-=-{0},{1}", locationNow.X,locationNow.Y);
                 Panel panelToClean = findPanelByLocation(locationNow);
-                panelToClean.MouseEnter -= panelHover;
+                panelToClean.MouseEnter -= panelEnter;
                 panelToClean.MouseWheel -= panelScroll;
-                panelToClean.MouseLeave -= panelNoLongerHover;
+                panelToClean.MouseLeave -= panelLeave;
             }
             
 
