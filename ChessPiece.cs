@@ -274,7 +274,7 @@ namespace MiniChess
                 chessPiecesTemp.Add(temp);
             }
             
-            Point kingPoint = Location;
+            Point kingPoint = new Point(-1,-1);//若没有王就没有被将的机会
 
             List<Point> possibleMovesTemp = new List<Point>();
             possibleMoves.ForEach(i => possibleMovesTemp.Add(i));
