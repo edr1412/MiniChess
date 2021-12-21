@@ -234,7 +234,8 @@ namespace MiniChess
                     chessPiece.setLocationLast(new Point(-1, -1));
                 }
             }
-                    foreach (ChessPiece chessPiece in chessPieces)
+            //检查有没有可动棋子，没有则游戏结束进入结果判断
+            foreach (ChessPiece chessPiece in chessPieces)
             {
                 if (chessPiece.getColor() == whiteTurn)
                 {
@@ -244,23 +245,29 @@ namespace MiniChess
                     }
                 }
             }
+            //王可能有多个
+            List<ChessPiece> kings = new List<ChessPiece>();
             foreach (ChessPiece chessPiece in chessPieces)
             {
                 if (chessPiece.getColor() == whiteTurn && chessPiece is King)
                 {
-                    if (chessPiece.isChecked(chessPieces, chessPiece.getLocation(), chessPiece.getColor()))
-                    {
-                        if (chessPiece.getColor() == true)
-                            this.BlackWins.Visible = true;
-                        else
-                            this.WhiteWins.Visible = true;
-                    }
-                    else
-                    {
-                        this.Draw.Visible = true;
-                    }
+                    kings.Add(chessPiece);
                 }
             }
+            //只要一个王被将就算输
+            foreach(ChessPiece king in kings)
+            {
+                if (king.isChecked(chessPieces, king.getLocation(), king.getColor()))
+                {
+                    if (king.getColor() == true)
+                        this.BlackWins.Visible = true;
+                    else
+                        this.WhiteWins.Visible = true;
+                    return;
+                }
+            }
+            //没有王被将，就平局
+            this.Draw.Visible = true;
         }
 
         //移动selectedPiece至指定位置。每个turn一次。
@@ -322,30 +329,33 @@ namespace MiniChess
             }
             //检查是否王车易位
             else if (selectedPiece is King && !selectedPiece.getHasMoved())
-            { 
-                //短易位
-                if(panelLocation.Y == 6)
+            {
+                if (selectedPiece.getLocation().X == (selectedPiece.getColor() ? 0 : 7) && selectedPiece.getLocation().Y == 4)
                 {
-                    Point rookLocation = new Point(selectedPiece.getColor() ? 0 : 7, 7);
-                    ChessPiece rookCastled = findChessPiece(rookLocation);
-                    rookCastled.setLocationLast(rookLocation);
-                    findPanelByLocation(rookLocation).BackgroundImage = null;
-                    findPanelByLocation(new Point(rookLocation.X,5)).BackgroundImage = rookCastled.getImage();
-                    rookCastled.setLocation(new Point(rookLocation.X, 5));
-                    rookCastled.setHasMoved(true);
+                    //短易位
+                    if (panelLocation.Y == 6)
+                    {
+                        Point rookLocation = new Point(selectedPiece.getColor() ? 0 : 7, 7);
+                        ChessPiece rookCastled = findChessPiece(rookLocation);
+                        rookCastled.setLocationLast(rookLocation);
+                        findPanelByLocation(rookLocation).BackgroundImage = null;
+                        findPanelByLocation(new Point(rookLocation.X, 5)).BackgroundImage = rookCastled.getImage();
+                        rookCastled.setLocation(new Point(rookLocation.X, 5));
+                        rookCastled.setHasMoved(true);
 
-                }
-                //长易位
-                else if (panelLocation.Y == 2)
-                {
-                    Point rookLocation = new Point(selectedPiece.getColor() ? 0 : 7, 0);
-                    ChessPiece rookCastled = findChessPiece(rookLocation);
-                    rookCastled.setLocationLast(rookLocation);
-                    findPanelByLocation(rookLocation).BackgroundImage = null;
-                    findPanelByLocation(new Point(rookLocation.X, 3)).BackgroundImage = rookCastled.getImage();
-                    rookCastled.setLocation(new Point(rookLocation.X, 3));
-                    rookCastled.setHasMoved(true);
+                    }
+                    //长易位
+                    else if (panelLocation.Y == 2)
+                    {
+                        Point rookLocation = new Point(selectedPiece.getColor() ? 0 : 7, 0);
+                        ChessPiece rookCastled = findChessPiece(rookLocation);
+                        rookCastled.setLocationLast(rookLocation);
+                        findPanelByLocation(rookLocation).BackgroundImage = null;
+                        findPanelByLocation(new Point(rookLocation.X, 3)).BackgroundImage = rookCastled.getImage();
+                        rookCastled.setLocation(new Point(rookLocation.X, 3));
+                        rookCastled.setHasMoved(true);
 
+                    }
                 }
             }
 
@@ -525,7 +535,7 @@ namespace MiniChess
             //清除有关升变的订阅。如果既动又没动，那就是刚刚升变了。
             if (locationNow.X>=0 && !findChessPiece(locationNow).getHasMoved())
             {
-                Console.WriteLine("-=-=-=-=-=-=-=-=-=-{0},{1}", locationNow.X,locationNow.Y);
+                //Console.WriteLine("-=-=-=-=-=-=-=-=-=-{0},{1}", locationNow.X,locationNow.Y);
                 Panel panelToClean = findPanelByLocation(locationNow);
                 panelToClean.MouseEnter -= panelEnter;
                 panelToClean.MouseWheel -= panelScroll;

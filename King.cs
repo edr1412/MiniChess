@@ -171,11 +171,10 @@ namespace MiniChess
         }
         protected override List<Point> addExtraMoves(List<ChessPiece> chessPieces)
         {
-            Point temp = new Point(Location.X, Location.Y);
             ChessPiece tempChessPiece;
 
             //检查是否满足王车易位
-            if (!hasMoved)
+            if (!hasMoved && Location.X == (Color ? 0 : 7) && Location.Y == 4)
             {
                 int x = Color ? 0 : 7;
                 //短易位
