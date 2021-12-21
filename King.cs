@@ -179,29 +179,29 @@ namespace MiniChess
             {
                 int x = Color ? 0 : 7;
                 //短易位
-                tempChessPiece = findChessPiece(new Point(x, 0), chessPieces);
+                tempChessPiece = findChessPiece(new Point(x, 7), chessPieces);
                 if (tempChessPiece is Rook && !tempChessPiece.getHasMoved())
                 {
                     //Console.WriteLine("passed 1");
-                    if (findChessPiece(new Point(x, 2), chessPieces) == null && findChessPiece(new Point(x, 1), chessPieces) == null)
+                    if (findChessPiece(new Point(x, 5), chessPieces) == null && findChessPiece(new Point(x, 6), chessPieces) == null)
                     {
                         //Console.WriteLine("passed 2");
-                        if (!isChecked(chessPieces, Location, Color) && !isChecked(chessPieces, new Point(x, 2), Color) && !isChecked(chessPieces, new Point(x, 1), Color))
+                        if (!isChecked(chessPieces, Location, Color) && !isChecked(chessPieces, new Point(x, 5), Color) && !isChecked(chessPieces, new Point(x, 6), Color))
                         {
                             //Console.WriteLine("passed 3");
-                            possibleMoves.Add(new Point(x, 1));
+                            possibleMoves.Add(new Point(x, 6));
                         }
                     }
                 }
                 //长易位
-                tempChessPiece = findChessPiece(new Point(x, 7), chessPieces);
+                tempChessPiece = findChessPiece(new Point(x, 0), chessPieces);
                 if (tempChessPiece is Rook && !tempChessPiece.getHasMoved())
                 {
-                    if (findChessPiece(new Point(x, 6), chessPieces) == null && findChessPiece(new Point(x, 5), chessPieces) == null && findChessPiece(new Point(x, 4), chessPieces) == null)
+                    if (findChessPiece(new Point(x, 1), chessPieces) == null && findChessPiece(new Point(x, 2), chessPieces) == null && findChessPiece(new Point(x, 3), chessPieces) == null)
                     {
-                        if (!isChecked(chessPieces, Location, Color) && !isChecked(chessPieces, new Point(x, 4), Color) && !isChecked(chessPieces, new Point(x, 3), Color))
+                        if (!isChecked(chessPieces, Location, Color) && !isChecked(chessPieces, new Point(x, 3), Color) && !isChecked(chessPieces, new Point(x, 4), Color))
                         {
-                            possibleMoves.Add(new Point(x, 5));
+                            possibleMoves.Add(new Point(x, 2));
                         }
                     }
                 }
