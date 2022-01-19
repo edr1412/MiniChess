@@ -1,6 +1,7 @@
 # MiniChess
 
 A simple chess program written by C#. You can play with your friend locally, or use it to gennerate a endgame to practice.
+
 Inspired by  [keesvm/ChessGame](https://github.com/keesvm/ChessGame). Thank you Muyden.
 
 
